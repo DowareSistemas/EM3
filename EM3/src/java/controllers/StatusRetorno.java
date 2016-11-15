@@ -14,4 +14,6 @@ public class StatusRetorno
     public static final int OPERACAO_OK = 600;
     public static final int NAO_ENCONTRADO = 404;
     public static final int FALHA_INTERNA = 800;
+    public static final int FALHA_VALIDACAO = 550;
+    public static final int NAO_AUTORIZADO_LS = 900;
 }

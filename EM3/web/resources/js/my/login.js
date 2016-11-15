@@ -6,8 +6,18 @@ $('#btnLogin').click(function ()
                 senha: $('#txSenha').val()
             };
 
-    $.post('usr-login', usuario, function (data)
+    $.post('usr-login', usuario, function (response)
     {
-        alert(data);
+        if(response.status === 600)
+            window.location = '/em3';
+        else
+            showMsg(response.message);
     });
 });
+
+function showMsg(text)
+{
+    $('#msg-login .msg').text(text);
+    $('#msg-login').modal('toggle');
+    $('#msg-login').modal('show');
+}

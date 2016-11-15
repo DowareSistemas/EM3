@@ -71,15 +71,15 @@ public class UsuariosController
             return new OperationResult(StatusRetorno.FALHA_INTERNA, "Ocorreu um problema ao excluir o usuário", "").get();
     }
 
-    @RequestMapping("/usr-login")
+    @RequestMapping(value = "/usr-login", produces = "application/json; charset=utf-8")
     public static @ResponseBody
     String login(Usuarios usuario, HttpServletRequest request)
     {
         SessionProvider.setConfig(ConfigurationController.getConfig(request));
         
         if (db.efetuaLogin(usuario))
-            return new OperationResult(StatusRetorno.OPERACAO_OK, "1", "").get();
+            return new OperationResult(StatusRetorno.OPERACAO_OK, "1", null).get();
         else
-            return new OperationResult(StatusRetorno.OPERACAO_OK, "0", "").get();
+            return new OperationResult(StatusRetorno.NAO_ENCONTRADO, "Usuário ou senha incorretos", null).get();
     }
 }
