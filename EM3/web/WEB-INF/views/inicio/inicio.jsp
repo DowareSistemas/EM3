@@ -32,7 +32,8 @@
                     </div>
                 </div>
             </nav>
-            <nav class="navbar navbar-fixed-left">
+        
+            <nav class="navbar navbar-fixed-left" id="menulateral">
                 <div class="panel-heading panel-nav-left">
                     <div class="panel-body">
                         <div class="row">
@@ -59,7 +60,7 @@
                             <span class="glyphicon glyphicon-triangle-bottom"></span>
                              <label class="text-nav-left">Estoque</label>
                         </button>
-                        <button type="button" class="btn btn-block btn-nav-left">Olá</button>
+                        <button type="button" class="btn btn-block btn-nav-left" id="teste">Olá</button>
                         <button type="button" class="btn btn-block btn-nav-left">Olá</button>
                         <button type="button" class="btn btn-block btn-nav-left">Olá</button>
                         <button type="button" class="btn btn-block btn-nav-left">Olá</button>

@@ -1,19 +1,35 @@
-<div class="panel-group col-md-4">
-    <div class="panel panel-default">
-
-        <div class="panel-heading">
-            <h4 class="panel-title">
-                <a data-toggle="collapse" href="#menu-estoque">CRM</a>
-            </h4>
-        </div>
-
-        <div id="menu-estoque" class="panel-collapse collapse">
-            <ul class="list-group">
-                <li class="btn list-group-item" id="btnClientes">Clientes</li>
-                <li class="btn list-group-item" id="btnFornecedores">Fornecedores</li>
-                <li class="btn list-group-item" id="btnGruposClientes">Grupos de clientes</li>
-            </ul>
-            <div class="panel-footer">Footer</div>
+ 
+<nav class="navbar navbar-fixed-left">
+    <div class="panel-heading panel-nav-left">
+        <div class="panel-body">
+            <div class="row">
+                <div class="col-md-12">
+                    <img src="resources/images/profile.png" alt="Imagem perfil" width="50" height="50" class="img-circle">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-9">
+                    <label class="text-nav-left">hello@example.com</label>
+                </div>
+                <div class="col-md-3">
+                    <button type="button" class="btn btn-panel-nav-left">
+                        <span class="glyphicon glyphicon-triangle-bottom"></span>
+                    </button>
+                </div>
+            </div>
         </div>
     </div>
-</div>
+
+    <div class="row">
+        <div class="col-md-12">
+            <button type="button" class="btn btn-block btn-nav-left">
+                <span class="glyphicon glyphicon-triangle-bottom"></span>
+                <label class="text-nav-left">Estoque</label>
+            </button>
+            <button type="button" class="btn btn-block btn-nav-left">Olá</button>
+            <button type="button" class="btn btn-block btn-nav-left">Olá</button>
+            <button type="button" class="btn btn-block btn-nav-left">Olá</button>
+            <button type="button" class="btn btn-block btn-nav-left">Olá</button>
+        </div>
+    </div>
+</nav>
