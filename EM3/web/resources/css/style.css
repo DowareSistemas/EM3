@@ -1,0 +1,57 @@
+/* 
+    Author     : Emerson Tinoco
+    By         : Doware
+*/
+
+body { 
+    padding-top: 70px;
+    background-color: #DBDBDB;
+}
+.navbar-default {
+    border-bottom-color: #12252b;
+}
+@media (min-width: 768px){
+    /* navbar-fixed-left: Início */
+    .navbar-fixed-left {
+        position: fixed;
+        width: 250px;
+        top: 50px;
+        bottom: -20px;
+        padding-top: 0px;
+        overflow-x: hidden;
+        overflow-y: auto;/* Scrollable contents if viewport is shorter than content. */
+        background-color: #12252B;
+        margin-left: -15px;
+        border-radius: 0px;
+        border: 0px;
+    }
+    .navbar-fixed-left-main {
+        margin-left: 250px;
+    }
+    .panel-nav-left {
+        background-color: #0B1619;
+    }
+    .btn-panel-nav-left {
+        border-radius: 0px;
+        background-color: #0B1619;
+        margin-top: -5px;
+        color: #777;
+    }
+    .text-nav-left {
+        color: #777;
+    }
+    .btn-nav-left {
+        border-radius: 0px;
+        background-color: #12252b;
+        color: #777;
+        font-size: 14px;
+        padding-top: 15px;
+        padding-bottom: 15px;
+        -webkit-transition-duration: 0.1s;
+        transition-duration: 0.1s;
+    }
+    .btn-nav-left:hover {
+        background-color: #f8f8f8;
+    }
+    /* navbar-fixed-left: Fim */
+}
