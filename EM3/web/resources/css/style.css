@@ -9,13 +9,15 @@ body {
 }
 .navbar-default {
     border-bottom-color: #12252b;
+    margin-left: 250px;
+        border-top-width: 0px;
 }
 @media (min-width: 768px){
     /* navbar-fixed-left: Início */
     .navbar-fixed-left {
         position: fixed;
         width: 250px;
-        top: 50px;
+        top: 0px;
         bottom: -20px;
         padding-top: 0px;
         overflow-x: hidden;
@@ -23,9 +25,11 @@ body {
         background-color: #12252B;
         margin-left: -15px;
         border-radius: 0px;
-        border: 0px;
+        border-width: 1px;
+        border-color: #0B1619;
+        border-top-width: 0px;
     }
-    .navbar-fixed-left-main {
+    .aside-main {
         margin-left: 250px;
     }
     .panel-nav-left {
