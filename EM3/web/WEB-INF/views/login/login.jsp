@@ -5,6 +5,7 @@
 --%>
 
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+<%@taglib tagdir="/WEB-INF/tags/mensagens/" prefix="msg" %>
 <!DOCTYPE html>
 <html>
     <head>
@@ -21,7 +22,7 @@
             <div class="row">
                 <div class="col-md-4"></div>
 
-                <div class="col-md-3">
+                <div class="col-md-4">
                     <div class="panel">
                         <form action="usr-login" id="form-login" method="post">
                             <div class="panel panel-heading" style="background: grey">
@@ -67,7 +68,9 @@
             <div class="col-md-4"></div>
         </div>
     </div>
-
+    
+    <msg:mensagem-ok id="msg-login"/>
+    
     <script src="resources/js/libs/jquery.js"></script>
     <script src="resources/js/libs/bootstrap.js"></script>
     <script src="resources/js/libs/jquery-form.js"></script>

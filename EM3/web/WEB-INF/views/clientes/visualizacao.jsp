@@ -12,6 +12,7 @@
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
         <title>JSP Page</title>
 
+        <link rel="stylesheet" href="resources/css/bootstrap.css">
         <link rel="stylesheet" href="resources/css/datatables.css">
     </head>
     <body>
@@ -19,7 +20,7 @@
         <div id="formulario">
             <formulario:cadastro-cliente/>
         </div>
-        
+
         <div id="visualizacao">
             <div class="row">
                 <div class="col-md-11">
@@ -230,7 +231,7 @@
         </div>
 
         <script src="resources/js/libs/jquery.js"></script>
-    
+        <script src="resources/js/libs/bootstrap.js"></script>
         <script src="resources/js/libs/datatables.js"></script>
         <script src="resources/js/my/clientes.js"></script>
     </body>

@@ -1,7 +1,12 @@
+$('#teste').click(function ()
+{
+    $('#menulateral').animate({width:'toggle'},350);
+});
+
 
 $('#btnClientes').click(function ()
 {
-    add('li-clientes', 'tab-clientes', 'Clientes',  'clientes');
+    add('li-clientes', 'tab-clientes', 'Clientes', 'clientes');
 });
 
 function add(li_id, tab_id, title, url)
@@ -25,7 +30,7 @@ function exists(id)
     {
         var self = this;
         var current_id = ($(self).attr('id'));
-        
+
         if (current_id === id)
             result = true;
     });
