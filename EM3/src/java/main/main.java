@@ -5,7 +5,9 @@
  */
 package main;
 
+import controllers.FornecedoresController;
 import java.io.File;
+import model.Fornecedores;
 
 /**
  *
@@ -18,8 +20,7 @@ public class main
     {
         try
         {
-            File f = new File("./config/configpath");
-            System.out.println(f.exists());
+            FornecedoresController.search("");
         }
         catch (Exception ex)
         {

@@ -18,6 +18,7 @@ public class PersistenceLogger implements IPersistenceLogger
     @Override
     public void newNofication(PersistenceLog pl)
     {
+        System.err.println(pl.getClass());
         System.err.println(pl.getDescription());
     }
     

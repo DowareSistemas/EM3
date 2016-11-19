@@ -28,9 +28,7 @@ public class Fornecedores extends Entity
    private int loja_fornecedor; 
    private String razao_social; 
    private String nome_fantasia; 
-   private String telefone1; 
-   private String inscr_municipal; 
-   private String inscr_estadual; 
+   private String telefone; 
    private String fax; 
    private String email; 
    private String observacoes; 
@@ -44,6 +42,7 @@ public class Fornecedores extends Entity
    private int documento_id; 
    private Documentos documentos; 
    private int banco_id; 
+   private String Data_cadastro;
 
    public void setId(int id)
    {
@@ -86,34 +85,14 @@ public class Fornecedores extends Entity
        return nome_fantasia;
    }
 
-   public void setTelefone1(String telefone1)
+   public void setTelefone(String telefone)
    {
-       this.telefone1 = telefone1;
+       this.telefone = telefone;
    }
  
-   public String getTelefone1()
+   public String getTelefone()
    {
-       return telefone1;
-   }
-
-   public void setInscr_municipal(String inscr_municipal)
-   {
-       this.inscr_municipal = inscr_municipal;
-   }
- 
-   public String getInscr_municipal()
-   {
-       return inscr_municipal;
-   }
-
-   public void setInscr_estadual(String inscr_estadual)
-   {
-       this.inscr_estadual = inscr_estadual;
-   }
- 
-   public String getInscr_estadual()
-   {
-       return inscr_estadual;
+       return telefone;
    }
 
    public void setFax(String fax)
@@ -165,6 +144,16 @@ public class Fornecedores extends Entity
    {
        return ativo;
    }
+
+    public String getData_cadastro()
+    {
+        return Data_cadastro;
+    }
+
+    public void setData_cadastro(String Data_cadastro)
+    {
+        this.Data_cadastro = Data_cadastro;
+    }
 
    public void setCredito(BigDecimal credito)
    {
