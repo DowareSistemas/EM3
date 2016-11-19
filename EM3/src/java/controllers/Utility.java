@@ -23,4 +23,16 @@ public class Utility
 
         return path;
     }
+
+    public static int tryParse(String text)
+    {
+        try
+        {
+            return Integer.parseInt(text);
+        }
+        catch (Exception ex)
+        {
+            return 0;
+        }
+    }
 }

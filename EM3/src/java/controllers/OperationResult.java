@@ -15,7 +15,7 @@ public class OperationResult
 {
     private int status;
     private String message;
-    private Object object;
+    private Object entity;
 
     public int getStatus()
     {
@@ -39,12 +39,12 @@ public class OperationResult
 
     public Object getObject()
     {
-        return object;
+        return entity;
     }
 
     public void setObject(Object object)
     {
-        this.object = object;
+        this.entity = object;
     }
     
     
@@ -52,7 +52,7 @@ public class OperationResult
     {
         this.status = status;
         this.message = msg;
-        this.object = obj;
+        this.entity = obj;
     }
     
    public String get()

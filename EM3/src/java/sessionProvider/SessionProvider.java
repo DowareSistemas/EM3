@@ -8,6 +8,8 @@ package sessionProvider;
 import br.com.persistor.generalClasses.DBConfig;
 import br.com.persistor.interfaces.Session;
 import br.com.persistor.sessionManager.SessionFactory;
+import controllers.ConfigurationController;
+import javax.servlet.http.HttpServletRequest;
 import loggers.PersistenceLogger;
 
 /**
@@ -24,6 +26,12 @@ public class SessionProvider
     {
         config = dBConfig;
         config.setPersistenceLogger(PersistenceLogger.class);
+    }
+    
+    public static void setConfig(HttpServletRequest request)
+    {
+       config = ConfigurationController.getConfig(request);
+       config.setPersistenceLogger(PersistenceLogger.class);
     }
 
     public static Session openSession()

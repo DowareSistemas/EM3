@@ -99,7 +99,7 @@ public abstract class Repository<T> implements IRepository<T>
             ICriteria c = mainSession.createCriteria(entity, RESULT_TYPE.MULTIPLE)
                     .add(Restrictions.eq(FILTER_TYPE.WHERE, field, value))
                     .execute();
-            return (!c.loadList(entity).isEmpty());
+            return (!mainSession.getList(entity).isEmpty());
         }
         catch (Exception ex)
         {

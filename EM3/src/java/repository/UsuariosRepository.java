@@ -20,14 +20,14 @@ import sessionProvider.SessionProvider;
 public class UsuariosRepository extends Repository<Usuarios> implements IUsuarios
 {
 
-    public boolean efetuaLogin(Usuarios usuario)
+    public Usuarios efetuaLogin(Usuarios usuario)
     {
         Session session = SessionProvider.openSession();
-        session.createCriteria(usuario, RESULT_TYPE.MULTIPLE)
+        session.createCriteria(usuario, RESULT_TYPE.UNIQUE)
                 .add(Restrictions.eq(FILTER_TYPE.WHERE, "nome", usuario.getNome()))
                 .add(Restrictions.eq(FILTER_TYPE.AND, "senha", usuario.getSenha()))
                 .execute();
         session.close();
-        return (!session.getList(usuario).isEmpty());
+        return usuario;
     }
 }

@@ -75,10 +75,11 @@ public class UsuariosController
     public static @ResponseBody
     String login(Usuarios usuario, HttpServletRequest request)
     {
-        SessionProvider.setConfig(ConfigurationController.getConfig(request));
-        
-        if (db.efetuaLogin(usuario))
-            return new OperationResult(StatusRetorno.OPERACAO_OK, "1", null).get();
+        SessionProvider.setConfig(request);
+        usuario = db.efetuaLogin(usuario);
+
+        if (usuario.getId() > 0)
+            return new OperationResult(StatusRetorno.OPERACAO_OK, "1", usuario).get();
         else
             return new OperationResult(StatusRetorno.NAO_ENCONTRADO, "Usuário ou senha incorretos", null).get();
     }
