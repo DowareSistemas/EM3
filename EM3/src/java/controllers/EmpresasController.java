@@ -35,7 +35,7 @@ public class EmpresasController
     String save(@Valid Empresa emp, BindingResult result)
     {
         if (result.hasErrors())
-            return new OperationResult(StatusRetorno.FALHA_VALIDACAO, result.getFieldErrors().get(0).getDefaultMessage(), "").get();
+            return new OperationResult(StatusRetorno.FALHA_VALIDACAO, result.getFieldErrors().get(0).getDefaultMessage(), "").getJson();
 
         if (db.exists(Empresa.class, "id", emp.getId()))
             db.merge(emp);
@@ -45,9 +45,9 @@ public class EmpresasController
         db.commit(true);
 
         if (emp.saved || emp.updated)
-            return new OperationResult(StatusRetorno.OPERACAO_OK, "Empresa salva", "").get();
+            return new OperationResult(StatusRetorno.OPERACAO_OK, "Empresa salva", "").getJson();
         else
-            return new OperationResult(StatusRetorno.FALHA_INTERNA, "Ocorreu um problema ao salvar a empresa. Acione o suporte Doware.", "").get();
+            return new OperationResult(StatusRetorno.FALHA_INTERNA, "Ocorreu um problema ao salvar a empresa. Acione o suporte Doware.", "").getJson();
     }
 
     @RequestMapping(value = "/emp-search", produces = "application/json; charset=utf-8")
@@ -63,9 +63,9 @@ public class EmpresasController
             empresas = db.search(searchTerm);
 
         if (empresas.isEmpty())
-            return new OperationResult(StatusRetorno.NAO_ENCONTRADO, "Nenhum registro encontrado", "").get();
+            return new OperationResult(StatusRetorno.NAO_ENCONTRADO, "Nenhum registro encontrado", "").getJson();
         else
-            return new OperationResult(StatusRetorno.OPERACAO_OK, empresas.size() + " registros encontrados.", empresas).get();
+            return new OperationResult(StatusRetorno.OPERACAO_OK, empresas.size() + " registros encontrados.", empresas).getJson();
     }
 
     @RequestMapping(value = "/emp-find", produces = "application/json; charset=utf-8")
@@ -76,8 +76,8 @@ public class EmpresasController
         db.close();
 
         if (e.getId() == 0)
-            return new OperationResult(StatusRetorno.NAO_ENCONTRADO, "Empresa não localizada", "").get();
+            return new OperationResult(StatusRetorno.NAO_ENCONTRADO, "Empresa não localizada", "").getJson();
         else
-            return new OperationResult(StatusRetorno.OPERACAO_OK, "Empresa encontrada", e).get();
+            return new OperationResult(StatusRetorno.OPERACAO_OK, "Empresa encontrada", e).getJson();
     }
 }

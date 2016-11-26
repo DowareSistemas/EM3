@@ -53,6 +53,18 @@ public class UnidadesRepository extends Repository<Unidades> implements IUnidade
         return session.getList(unidades);
     }
 
+    public Unidades getBySigla(String sigla)
+    {
+        sigla = sigla.trim();
+        Unidades unidade = new Unidades();
+        Session session = SessionProvider.openSession();
+        session.createCriteria(unidade, RESULT_TYPE.UNIQUE)
+                .add(Restrictions.eq(FILTER_TYPE.WHERE, "sigla", sigla))
+                .execute();
+        session.close();
+        return unidade;
+    }
+    
     public boolean isValidDelete(int id)
     {
         Produtos p = new Produtos();

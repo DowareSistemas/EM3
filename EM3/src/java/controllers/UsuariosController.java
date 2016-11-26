@@ -36,9 +36,9 @@ public class UsuariosController
         db.commit(true);
 
         if (usuario.saved || usuario.updated)
-            return new OperationResult(StatusRetorno.OPERACAO_OK, "Usuário salvo", "").get();
+            return new OperationResult(StatusRetorno.OPERACAO_OK, "Usuário salvo", "").getJson();
         else
-            return new OperationResult(StatusRetorno.FALHA_INTERNA, "Ocorreu um problema ao salvar o usuário", "").get();
+            return new OperationResult(StatusRetorno.FALHA_INTERNA, "Ocorreu um problema ao salvar o usuário", "").getJson();
     }
 
     @RequestMapping("/usr-get")
@@ -49,9 +49,9 @@ public class UsuariosController
         db.close();
 
         if (u.getId() == 0)
-            return new OperationResult(StatusRetorno.NAO_ENCONTRADO, "Usuário não localizado", "").get();
+            return new OperationResult(StatusRetorno.NAO_ENCONTRADO, "Usuário não localizado", "").getJson();
         else
-            return new OperationResult(StatusRetorno.OPERACAO_OK, "", u).get();
+            return new OperationResult(StatusRetorno.OPERACAO_OK, "", u).getJson();
     }
 
     @RequestMapping("/usr-rem")
@@ -60,15 +60,15 @@ public class UsuariosController
     {
         Usuarios u = db.get(Usuarios.class, id);
         if (u.getId() == 0)
-            return new OperationResult(StatusRetorno.NAO_ENCONTRADO, "Usuário não localizado", "").get();
+            return new OperationResult(StatusRetorno.NAO_ENCONTRADO, "Usuário não localizado", "").getJson();
 
         db.remove(u);
         db.commit(true);
 
         if (u.deleted)
-            return new OperationResult(StatusRetorno.OPERACAO_OK, "Usuário excluido", "").get();
+            return new OperationResult(StatusRetorno.OPERACAO_OK, "Usuário excluido", "").getJson();
         else
-            return new OperationResult(StatusRetorno.FALHA_INTERNA, "Ocorreu um problema ao excluir o usuário", "").get();
+            return new OperationResult(StatusRetorno.FALHA_INTERNA, "Ocorreu um problema ao excluir o usuário", "").getJson();
     }
 
     @RequestMapping(value = "/usr-login", produces = "application/json; charset=utf-8")
@@ -79,8 +79,23 @@ public class UsuariosController
         usuario = db.efetuaLogin(usuario);
 
         if (usuario.getId() > 0)
-            return new OperationResult(StatusRetorno.OPERACAO_OK, "1", usuario).get();
+            return new OperationResult(StatusRetorno.OPERACAO_OK, "1", usuario).getJson();
         else
-            return new OperationResult(StatusRetorno.NAO_ENCONTRADO, "Usuário ou senha incorretos", null).get();
+            return new OperationResult(StatusRetorno.NAO_ENCONTRADO, "Usuário ou senha incorretos", null).getJson();
+    }
+
+    @RequestMapping(value = "/usr-validperm", produces = "application/json; charset=utf-8")
+    public static @ResponseBody
+    String validaPermissao(
+            @RequestParam(value = "tela") String tela,
+            @RequestParam(value = "usuario") int usuario,
+            @RequestParam(value = "tipo_permisao") int tipo_permissao)
+    {
+        boolean valido = db.validaPermissao(tela, usuario, tipo_permissao);
+
+        if (valido)
+            return new OperationResult(StatusRetorno.OPERACAO_OK, "Acesso autorizado.", 1).getJson();
+        else
+            return new OperationResult(StatusRetorno.OPERACAO_OK, "Acesso negado.", 0).getJson();
     }
 }
