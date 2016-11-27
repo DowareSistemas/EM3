@@ -13,7 +13,7 @@ import br.com.persistor.interfaces.ICriteria;
 import br.com.persistor.interfaces.Session;
 import interfaces.IGrupos_usuarios;
 import model.Grupos_usuarios;
-import model.Usuarios_grupos;
+import model.Usuarios;
 import sessionProvider.SessionProvider;
 
 /**
@@ -26,19 +26,18 @@ public class Grupos_usuariosRepository extends Repository<Grupos_usuarios> imple
     public Grupos_usuarios findByUsuario(int usuario_id)
     {
         Grupos_usuarios grupo = new Grupos_usuarios();
-        Usuarios_grupos usuarios_grupos = new Usuarios_grupos();
-
+        Usuarios usuarios = new Usuarios();
+        
         Session session = SessionProvider.openSession();
 
         ICriteria c = session.createCriteria(grupo, RESULT_TYPE.UNIQUE);
-        c.add(JOIN_TYPE.INNER, usuarios_grupos, "usuarios_grupos.grupo_id = grupos.id");
-        c.add(Restrictions.eq(FILTER_TYPE.WHERE, "usuario_id", usuario_id));
+        c.add(JOIN_TYPE.INNER, usuarios, "usuarios.grupo_usuarios_id = grupos_usuarios.id");
+        c.add(Restrictions.eq(FILTER_TYPE.WHERE, "usuarios.id", usuario_id));
         c.execute();
         c.loadEntity(grupo);
-        c.loadEntity(usuarios_grupos);
+        c.loadEntity(usuarios);
 
         session.close();
-        
         return grupo;
     }
 }

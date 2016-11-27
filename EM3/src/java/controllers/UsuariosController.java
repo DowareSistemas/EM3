@@ -5,7 +5,6 @@
  */
 package controllers;
 
-import com.google.gson.Gson;
 import javax.servlet.http.HttpServletRequest;
 import model.Usuarios;
 import org.springframework.stereotype.Controller;
@@ -25,7 +24,7 @@ public class UsuariosController
 
     static UsuariosRepository db = new UsuariosRepository();
 
-    @RequestMapping("/usr-save")
+    @RequestMapping(value = "/usr-save", produces = "application/json; charset=utf-8")
     public @ResponseBody
     String save(Usuarios usuario)
     {
@@ -41,7 +40,7 @@ public class UsuariosController
             return new OperationResult(StatusRetorno.FALHA_INTERNA, "Ocorreu um problema ao salvar o usuário", "").getJson();
     }
 
-    @RequestMapping("/usr-get")
+    @RequestMapping(value = "/usr-get", produces = "application/json; charset=utf-8")
     public static @ResponseBody
     String get(@RequestParam(value = "id") int id)
     {
@@ -54,7 +53,7 @@ public class UsuariosController
             return new OperationResult(StatusRetorno.OPERACAO_OK, "", u).getJson();
     }
 
-    @RequestMapping("/usr-rem")
+    @RequestMapping(value = "/usr-rem", produces = "application/json; charset=utf-8")
     public static @ResponseBody
     String remove(int id)
     {
