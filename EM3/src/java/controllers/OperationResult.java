@@ -55,7 +55,7 @@ public class OperationResult
         this.entity = obj;
     }
     
-   public String getJson()
+   public String toJson()
    {
        Gson gson = new Gson();
        return gson.toJson(this);

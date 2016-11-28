@@ -69,39 +69,55 @@ public interface IRepository<T>
     public void remove(T entity, Session session);
 
     /**
+     * Deleta uma entidade no banco dentro de uma transacao passando como
+     * paramatro a instancia da entidade a ser deletada, e a Session em
+     * transação
+     *
+     * @param entity entidade a ser removida
+     * @param session Session em transacao
+     * @param whereCondition condição (sem "where") para ser usada na operação
+     */
+    public void remove(T entity, String whereCondition);
+
+    public void remove(T entity, Session session, String whereCondition);
+
+    /**
      * Confirma as alterações nas entidades, fazendo commit no banco
      */
     public void commit(boolean close);
 
     /**
-     * Fecha a Session utilizada,
-     * devolve a conexao para o pool e executa a limpeza do cache
+     * Fecha a Session utilizada, devolve a conexao para o pool e executa a
+     * limpeza do cache
      */
     public void close();
 
     /**
      * Obtem uma instancia da entidade, pupulada com os dados do banco
-     * 
+     *
      * @param entityClass classe da entidade a carregar
      * @param id valor da chave primaria da entidade
-     * @return 
+     * @return
      */
     public T get(Class entityClass, int id);
 
     /**
-     * Faz uma verificacao para saber se existe uma representacao
-     * da entidade no banco
-     * 
+     * Faz uma verificacao para saber se existe uma representacao da entidade no
+     * banco
+     *
      * @param entityClass classe da entidade a verificar
      * @param field campo a ser verificado
      * @param value valor esperado na verificacao
-     * @return 
+     * @return
      */
     public boolean exists(Class entityClass, String field, Object value);
-    
+
     /**
      * Obtem a Session inicializada no repositorio
-     * @return 
+     *
+     * @return
      */
     public Session getCurrentSession();
+    
+    public int count(Class entityClass, String whereConditions);
 }

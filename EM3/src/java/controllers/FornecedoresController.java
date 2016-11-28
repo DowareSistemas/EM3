@@ -37,9 +37,9 @@ public class FornecedoresController
             fornecedores = db.search(query);
 
         if (fornecedores.isEmpty())
-            return new OperationResult(StatusRetorno.NAO_ENCONTRADO, "Nenhum registro encontrado", "").getJson();
+            return new OperationResult(StatusRetorno.NAO_ENCONTRADO, "Nenhum registro encontrado", "").toJson();
         else
-            return new OperationResult(StatusRetorno.OPERACAO_OK, fornecedores.size() + " registros encontrados.", fornecedores).getJson();
+            return new OperationResult(StatusRetorno.OPERACAO_OK, fornecedores.size() + " registros encontrados.", fornecedores).toJson();
     }
     
     @RequestMapping(value = "forn-del")
@@ -48,7 +48,7 @@ public class FornecedoresController
     {
         Fornecedores forn = db.get(Fornecedores.class, id);
         if(forn.getId() == 0)
-            return new OperationResult(StatusRetorno.NAO_ENCONTRADO, "Fornecedor não localizado.", "").getJson();
+            return new OperationResult(StatusRetorno.NAO_ENCONTRADO, "Fornecedor não localizado.", "").toJson();
         
         DocumentosController.delete(forn.getDocumentos(), db.getCurrentSession());
         EnderecosController.delete(forn.getEnderecos(), db.getCurrentSession());
@@ -56,9 +56,9 @@ public class FornecedoresController
         db.commit(true);
         
         if(forn.deleted)
-            return new OperationResult(StatusRetorno.OPERACAO_OK, "Fornecedor excluído.", "").getJson();
+            return new OperationResult(StatusRetorno.OPERACAO_OK, "Fornecedor excluído.", "").toJson();
         else
-            return new OperationResult(StatusRetorno.FALHA_INTERNA, "Ocorreu um problema ao excluir o fornecedor. Acione o suporte Doware", "").getJson();
+            return new OperationResult(StatusRetorno.FALHA_INTERNA, "Ocorreu um problema ao excluir o fornecedor. Acione o suporte Doware", "").toJson();
     }
 
     @RequestMapping(value = "forn-save")
@@ -66,7 +66,7 @@ public class FornecedoresController
     String save(@Valid Fornecedores fornecedor, BindingResult result)
     {
         if (result.hasErrors())
-            return new OperationResult(StatusRetorno.FALHA_VALIDACAO, result.getFieldErrors().get(0).getDefaultMessage(), "").getJson();
+            return new OperationResult(StatusRetorno.FALHA_VALIDACAO, result.getFieldErrors().get(0).getDefaultMessage(), "").toJson();
 
         if (db.exists(Fornecedores.class, "id", fornecedor.getId()))
             db.merge(fornecedor);
@@ -76,9 +76,9 @@ public class FornecedoresController
         db.commit(true);
 
         if (fornecedor.saved || fornecedor.updated)
-            return new OperationResult(StatusRetorno.OPERACAO_OK, "Fornecedor salvo.", "").getJson();
+            return new OperationResult(StatusRetorno.OPERACAO_OK, "Fornecedor salvo.", "").toJson();
         else
-            return new OperationResult(StatusRetorno.FALHA_INTERNA, "Ocorreu um problema ao salvar o fornecedor. Acione o suporte Doware", "").getJson();
+            return new OperationResult(StatusRetorno.FALHA_INTERNA, "Ocorreu um problema ao salvar o fornecedor. Acione o suporte Doware", "").toJson();
     }
 
 }

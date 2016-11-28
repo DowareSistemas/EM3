@@ -24,6 +24,6 @@ public class TelasController
     public static @ResponseBody
     String listAll()
     {
-        return new OperationResult(StatusRetorno.OPERACAO_OK, "", db.listAll()).getJson();
+        return new OperationResult(StatusRetorno.OPERACAO_OK, "", db.listAll()).toJson();
     }
 }

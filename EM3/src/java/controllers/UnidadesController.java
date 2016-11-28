@@ -36,9 +36,9 @@ public class UnidadesController
             unidades = db.search(searchTerm);
 
         if (unidades.isEmpty())
-            return new OperationResult(StatusRetorno.NAO_ENCONTRADO, "Nenhum registro encontrado", "").getJson();
+            return new OperationResult(StatusRetorno.NAO_ENCONTRADO, "Nenhum registro encontrado", "").toJson();
         else
-            return new OperationResult(StatusRetorno.OPERACAO_OK, unidades.size() + " registros encontrados.", unidades).getJson();
+            return new OperationResult(StatusRetorno.OPERACAO_OK, unidades.size() + " registros encontrados.", unidades).toJson();
     }
 
     @RequestMapping(value = "und-get", produces = "application/json; charset=utf-8")
@@ -49,9 +49,9 @@ public class UnidadesController
         db.close();
 
         if (unidade.getId() == 0)
-            return new OperationResult(StatusRetorno.NAO_ENCONTRADO, "Unidade não localizada", "").getJson();
+            return new OperationResult(StatusRetorno.NAO_ENCONTRADO, "Unidade não localizada", "").toJson();
         else
-            return new OperationResult(StatusRetorno.OPERACAO_OK, "Unidade localizada", unidade).getJson();
+            return new OperationResult(StatusRetorno.OPERACAO_OK, "Unidade localizada", unidade).toJson();
     }
 
     @RequestMapping(value = "und-save", produces = "application/json; charset=utf-8")
@@ -59,7 +59,7 @@ public class UnidadesController
     String save(@Valid Unidades unidade, BindingResult result)
     {
         if (result.hasErrors())
-            return new OperationResult(StatusRetorno.FALHA_VALIDACAO, result.getFieldErrors().get(0).getDefaultMessage(), "").getJson();
+            return new OperationResult(StatusRetorno.FALHA_VALIDACAO, result.getFieldErrors().get(0).getDefaultMessage(), "").toJson();
 
         unidade.setSigla(unidade.getSigla().toUpperCase());
 
@@ -68,7 +68,7 @@ public class UnidadesController
         else
         {
             if (db.getBySigla(unidade.getSigla()).getId() > 0)
-                return new OperationResult(StatusRetorno.FALHA_VALIDACAO, "Já existe uma unidade com esta sigla. Escolha outra sigla e tente novamente.", "").getJson();
+                return new OperationResult(StatusRetorno.FALHA_VALIDACAO, "Já existe uma unidade com esta sigla. Escolha outra sigla e tente novamente.", "").toJson();
 
             db.add(unidade);
         }
@@ -76,9 +76,9 @@ public class UnidadesController
         db.commit(true);
 
         if (unidade.saved || unidade.updated)
-            return new OperationResult(StatusRetorno.OPERACAO_OK, "Unidade salva.", "").getJson();
+            return new OperationResult(StatusRetorno.OPERACAO_OK, "Unidade salva.", "").toJson();
         else
-            return new OperationResult(StatusRetorno.FALHA_INTERNA, "Ocorreu um problema ao salvar a unidade. Acione o suporte Doware.", "").getJson();
+            return new OperationResult(StatusRetorno.FALHA_INTERNA, "Ocorreu um problema ao salvar a unidade. Acione o suporte Doware.", "").toJson();
     }
 
     @RequestMapping(value = "und-del", produces = "application/json; charset=utf-8")
@@ -88,17 +88,17 @@ public class UnidadesController
         Unidades unidade = db.get(Unidades.class, id);
 
         if (unidade.getId() == 0)
-            return new OperationResult(StatusRetorno.NAO_ENCONTRADO, "Unidade não localizada", "").getJson();
+            return new OperationResult(StatusRetorno.NAO_ENCONTRADO, "Unidade não localizada", "").toJson();
 
         if (db.isValidDelete(id))
-            return new OperationResult(StatusRetorno.FALHA_VALIDACAO, "Esta unidade não pode ser removida. Existem um ou mais produtos relacionados a ela.", "").getJson();
+            return new OperationResult(StatusRetorno.FALHA_VALIDACAO, "Esta unidade não pode ser removida. Existem um ou mais produtos relacionados a ela.", "").toJson();
 
         db.remove(unidade);
         db.commit(true);
 
         if (unidade.deleted)
-            return new OperationResult(StatusRetorno.OPERACAO_OK, "Unidade removida", "").getJson();
+            return new OperationResult(StatusRetorno.OPERACAO_OK, "Unidade removida", "").toJson();
         else
-            return new OperationResult(StatusRetorno.FALHA_INTERNA, "Ocorreu um problema ao remover a unidade. Acione o suporte Doware.", "").getJson();
+            return new OperationResult(StatusRetorno.FALHA_INTERNA, "Ocorreu um problema ao remover a unidade. Acione o suporte Doware.", "").toJson();
     }
 }

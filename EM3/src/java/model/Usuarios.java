@@ -10,6 +10,10 @@ import br.com.persistor.enums.INCREMENT;
 import br.com.persistor.annotations.OneToOne;
 import br.com.persistor.enums.JOIN_TYPE;
 import br.com.persistor.enums.LOAD;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+import org.hibernate.validator.constraints.NotEmpty;
 
 /**
  *
@@ -19,10 +23,20 @@ public class Usuarios extends Entity
 {
 
     private int id;
+    
+    @Size(max = 50, message = "O nome do usuário não pode passar de 50 caracteres")
+    @NotNull(message = "O nome é obrigatório")
+    @NotEmpty(message = "O nome é obrigatório")
     private String nome;
+    
+    @Size(max = 20, message = "A senha não pode passar de 20 caracteres")
     private String senha;
     private boolean admin;
+    
+    @NotNull(message = "É necessário informar se o usuário está ativo")
     private boolean ativo;
+    
+    @Min(value = 1, message = "O grupo de usuários é obrigatório")
     private int grupo_usuarios_id;
 
     private Grupos_usuarios grupos_usuarios;

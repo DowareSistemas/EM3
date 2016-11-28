@@ -60,13 +60,32 @@ public abstract class Repository<T> implements IRepository<T>
         checkInitialization();
         mainSession.delete(entity);
     }
+    
+    @Override
+    public int count(Class entityClass, String whereCondition)
+    {
+        checkInitialization();
+        return mainSession.count(entityClass, whereCondition);
+    }
 
     @Override
     public void remove(T entity, Session session)
     {
         session.delete(entity);
     }
-
+    
+    @Override
+    public void remove(T entity, Session session, String whereCondition)
+    {
+        session.delete(entity, whereCondition);
+    }
+    
+    @Override
+    public void remove(T entity, String whereCondition)
+    {
+        mainSession.delete(this, whereCondition);
+    }
+    
     @Override
     public void commit(boolean close)
     {

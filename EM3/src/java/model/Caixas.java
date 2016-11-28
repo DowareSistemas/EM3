@@ -24,72 +24,63 @@ import java.io.InputStream;
 
 public class Caixas extends Entity 
 {
-   private int id; 
-   private String nome; 
-   private String data_abertura; 
-   private String data_fechamento; 
-   private int usuario_id; 
-   private Usuarios usuarios; 
+    private int id;
+    private String nome;
+    private boolean ativo;
+    private int empresa_id;
 
-   public void setId(int id)
-   {
-       this.id = id;
-   }
- 
-   @PrimaryKey(increment = INCREMENT.MANUAL)
-   public int getId()
-   {
-       return id;
-   }
+    private Empresa empresa;
 
-   public void setNome(String nome)
-   {
-       this.nome = nome;
-   }
- 
-   public String getNome()
-   {
-       return nome;
-   }
+    @OneToOne(source = "empresa_id", target = "id", join_type = JOIN_TYPE.INNER, load = LOAD.AUTO)
+    public Empresa getEmpresa()
+    {
+        return empresa;
+    }
 
-   public void setData_abertura(String data_abertura)
-   {
-       this.data_abertura = data_abertura;
-   }
- 
-   public String getData_abertura()
-   {
-       return data_abertura;
-   }
+    public void setEmpresa(Empresa empresa)
+    {
+        this.empresa = empresa;
+    }
+    
+    @PrimaryKey(increment = INCREMENT.MANUAL)
+    public int getId()
+    {
+        return id;
+    }
 
-   public void setData_fechamento(String data_fechamento)
-   {
-       this.data_fechamento = data_fechamento;
-   }
- 
-   public String getData_fechamento()
-   {
-       return data_fechamento;
-   }
+    public void setId(int id)
+    {
+        this.id = id;
+    }
 
- 
-   public void setUsuarios(Usuarios usuarios)
-   {
-       this.usuarios = usuarios;
-   }
-   public void setUsuario_id(int usuario_id)
-   {
-       this.usuario_id = usuario_id;
-   }
- 
-   public int getUsuario_id()
-   {
-       return usuario_id;
-   }
+    public String getNome()
+    {
+        return nome;
+    }
 
-   @OneToOne(source = "usuario_id", target = "id" , load = LOAD.AUTO, join_type = JOIN_TYPE.INNER)
-   public Usuarios getUsuarios()
-   {
-       return usuarios;
-   }
+    public void setNome(String nome)
+    {
+        this.nome = nome;
+    }
+
+    public boolean isAtivo()
+    {
+        return ativo;
+    }
+
+    public void setAtivo(boolean ativo)
+    {
+        this.ativo = ativo;
+    }
+
+    public int getEmpresa_id()
+    {
+        return empresa_id;
+    }
+
+    public void setEmpresa_id(int empresa_id)
+    {
+        this.empresa_id = empresa_id;
+    }
+    
 }
