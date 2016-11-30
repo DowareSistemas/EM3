@@ -29,13 +29,13 @@ public class ArmazensController
 
     @RequestMapping(value = "armz-search", produces = "application/json; charset=utf-8")
     public @ResponseBody
-    String search(@RequestParam(value = "query") String searchTerm)
+    String search(@RequestParam(value = "query") String searchTerm, @RequestParam(value = "empresa_id") int empresa_id)
     {
         List<Armazens> result;
         if (searchTerm.isEmpty())
-            result = db.listAll();
+            result = db.listAll(empresa_id);
         else
-            result = db.search(searchTerm);
+            result = db.search(searchTerm, empresa_id);
 
         if (result.isEmpty())
             return new OperationResult(StatusRetorno.NAO_ENCONTRADO, "Nenhum registro encontrado.", "").toJson();

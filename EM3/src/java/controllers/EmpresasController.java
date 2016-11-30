@@ -74,8 +74,10 @@ public class EmpresasController
 
     @RequestMapping(value = "/emp-find", produces = "application/json; charset=utf-8")
     public @ResponseBody
-    String find(@RequestParam(value = "id") int id)
+    String find(@RequestParam(value = "id") int id, HttpServletRequest request)
     {
+        SessionProvider.setConfig(request);
+        
         Session session = SessionProvider.openSession();
         Empresa e = session.onID(Empresa.class, id);
         session.close();

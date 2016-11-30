@@ -28,7 +28,7 @@ public class ArmazensRepository
 
     private String message = "";
     
-    public List<Armazens> listAll()
+    public List<Armazens> listAll(int empresa_id)
     {
         Empresa empr = new Empresa();
         Armazens armz = new Armazens();
@@ -36,6 +36,10 @@ public class ArmazensRepository
         Session session = SessionProvider.openSession();
         ICriteria c = session.createCriteria(armz, RESULT_TYPE.MULTIPLE);
         c.add(JOIN_TYPE.LEFT, empr, "armazens.empresa_id = empresa.id");
+        
+        if(empresa_id > 0)
+            c.add(Restrictions.eq(FILTER_TYPE.WHERE, "empresa.id", empresa_id));
+        
         c.execute();
         c.loadList(empr);
         c.loadList(armz);
@@ -52,7 +56,7 @@ public class ArmazensRepository
         return armazens;
     }
 
-    public List<Armazens> search(String searchTerm)
+    public List<Armazens> search(String searchTerm, int empresa_id)
     {
         searchTerm = searchTerm.replace("'", "");
 
@@ -63,8 +67,13 @@ public class ArmazensRepository
         ICriteria c = session.createCriteria(armz, RESULT_TYPE.MULTIPLE);
         c.add(JOIN_TYPE.LEFT, empr, "armazens.empresa_id = empresa.id");
         c.add(Restrictions.like(FILTER_TYPE.WHERE, "armazens.nome", searchTerm, MATCH_MODE.ANYWHERE));
+        
         if (Utility.tryParse(searchTerm) > 0)
             c.add(Restrictions.eq(FILTER_TYPE.OR, "armazens.id", Utility.tryParse(searchTerm)));
+        
+        if(empresa_id > 0)
+            c.add(Restrictions.eq(FILTER_TYPE.AND, "empresa.id", empresa_id));
+        
         c.execute();
         c.loadList(empr);
         c.loadList(armz);
