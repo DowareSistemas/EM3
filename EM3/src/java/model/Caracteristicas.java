@@ -16,6 +16,9 @@ import br.com.persistor.enums.JOIN_TYPE;
 import br.com.persistor.enums.LOAD;
 import java.util.Date;
 import java.io.InputStream;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+import org.hibernate.validator.constraints.NotEmpty;
 
 /**
  *
@@ -25,7 +28,15 @@ import java.io.InputStream;
 public class Caracteristicas extends Entity 
 {
    private int id; 
+   
+   @NotNull(message = "O atributo é obrigatório")
+   @NotEmpty(message = "O atributo é obrigatório")
+   @Size(max = 100, message = "O atributo não pode ter mais de 100 caracteres")
    private String atributo; 
+   
+   @NotNull(message = "O valor do atributo é obrigatório")
+   @NotEmpty(message = "O valor do atributo é obrigatório")
+   @Size(max = 100, message = "O valor não pode ter mais de 100 caracteres")
    private String valor; 
 
    public void setId(int id)

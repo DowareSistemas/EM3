@@ -5,8 +5,10 @@
  */
 package controllers;
 
+import br.com.persistor.interfaces.Session;
 import model.Clientes;
 import repository.ClientesRepository;
+import sessionProvider.SessionProvider;
 
 /**
  *
@@ -15,22 +17,28 @@ import repository.ClientesRepository;
 public class ClientesController
 {
 
-    static ClientesRepository db = new ClientesRepository();
+    ClientesRepository db = new ClientesRepository();
 
-    public static void salva(Clientes cliente)
+    public void salva(Clientes cliente)
     {
-        if (db.exists(Clientes.class, "id", cliente.getId()))
-            db.merge(cliente);
+        Session session = SessionProvider.openSession();
+
+        if (Utility.exists(Clientes.class, "id", cliente.getId()))
+            session.update(cliente);
         else
-            db.add(cliente);
-
-        db.commit(true);
+            session.save(cliente);
+        
+        session.commit();
+        session.close();
     }
-    
-    public static void deletar(int id)
+
+    public void deletar(int id)
     {
-        Clientes cliente = db.get(Clientes.class, id);
-        db.remove(cliente);
-        db.commit(true);
+        Session session = SessionProvider.openSession();
+        
+        Clientes cliente = session.onID(Clientes.class, id);
+        session.delete(cliente);
+        session.commit();
+        session.close();
     }
 }

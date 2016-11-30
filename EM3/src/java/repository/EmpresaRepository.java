@@ -13,7 +13,6 @@ import br.com.persistor.generalClasses.Restrictions;
 import br.com.persistor.interfaces.ICriteria;
 import br.com.persistor.interfaces.Session;
 import controllers.Utility;
-import interfaces.IEmpresa;
 import java.util.List;
 import model.Empresa;
 import model.Enderecos;
@@ -23,7 +22,7 @@ import sessionProvider.SessionProvider;
  *
  * @author Marcos Vinícius
  */
-public class EmpresaRepository extends Repository<Empresa> implements IEmpresa
+public class EmpresaRepository
 {
     public List<Empresa> getAll()
     {

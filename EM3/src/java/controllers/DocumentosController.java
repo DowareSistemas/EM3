@@ -15,10 +15,8 @@ import repository.DocumentosRepository;
  */
 public class DocumentosController
 {
-    static DocumentosRepository db = new DocumentosRepository();
-    
-    public static void delete(Documentos documento, Session session)
+    public void delete(Documentos documento, Session session)
     {
-        db.remove(documento, session);
+        session.delete(documento);
     }
 }

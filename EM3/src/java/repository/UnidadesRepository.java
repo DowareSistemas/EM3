@@ -12,7 +12,6 @@ import br.com.persistor.generalClasses.Restrictions;
 import br.com.persistor.interfaces.ICriteria;
 import br.com.persistor.interfaces.Session;
 import controllers.Utility;
-import interfaces.IUnidades;
 import java.util.List;
 import model.Produtos;
 import model.Unidades;
@@ -22,7 +21,7 @@ import sessionProvider.SessionProvider;
  *
  * @author Marcos Vinícius
  */
-public class UnidadesRepository extends Repository<Unidades> implements IUnidades
+public class UnidadesRepository 
 {
 
     public List<Unidades> getAll()

@@ -27,20 +27,21 @@ public class SessionProvider
         config = dBConfig;
         config.setPersistenceLogger(PersistenceLogger.class);
     }
-    
+
     public static void setConfig(HttpServletRequest request)
     {
-       config = ConfigurationController.getConfig(request);
-       config.setPersistenceLogger(PersistenceLogger.class);
+        config = ConfigurationController.getConfig(request);
+        config.setPersistenceLogger(PersistenceLogger.class);
+        config.setMaxPoolSize(10);
     }
 
     public static Session openSession()
     {
         try
         {
-            if(factory == null)
+            if (factory == null)
                 factory = new SessionFactory();
-            
+
             return factory.getSession(config);
         }
         catch (Exception ex)
@@ -53,16 +54,16 @@ public class SessionProvider
 
     public static boolean test()
     {
-        if(factory != null)
+        if (factory != null)
             factory.reset();
-        
+
         Session session = openSession();
-        if(session != null)
+        if (session != null)
         {
             session.close();
             return true;
         }
-        
+
         return false;
     }
 }

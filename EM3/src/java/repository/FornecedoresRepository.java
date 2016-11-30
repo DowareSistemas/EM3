@@ -13,7 +13,6 @@ import br.com.persistor.generalClasses.Restrictions;
 import br.com.persistor.interfaces.ICriteria;
 import br.com.persistor.interfaces.Session;
 import controllers.Utility;
-import interfaces.IFornecedor;
 import java.util.List;
 import model.Documentos;
 import model.Enderecos;
@@ -24,7 +23,7 @@ import sessionProvider.SessionProvider;
  *
  * @author Marcos Vinícius
  */
-public class FornecedoresRepository extends Repository<Fornecedores> implements IFornecedor
+public class FornecedoresRepository
 {
 
     public List<Fornecedores> getAll()

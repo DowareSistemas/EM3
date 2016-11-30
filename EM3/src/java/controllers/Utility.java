@@ -5,7 +5,13 @@
  */
 package controllers;
 
+import br.com.persistor.enums.FILTER_TYPE;
+import br.com.persistor.enums.RESULT_TYPE;
+import br.com.persistor.generalClasses.Restrictions;
+import br.com.persistor.interfaces.ICriteria;
+import br.com.persistor.interfaces.Session;
 import javax.servlet.http.HttpServletRequest;
+import sessionProvider.SessionProvider;
 
 /**
  *
@@ -13,6 +19,27 @@ import javax.servlet.http.HttpServletRequest;
  */
 public class Utility
 {
+
+    public static boolean exists(Class entityClass, String field, Object value)
+    {
+        Session mainSession = null;
+        try
+        {
+            mainSession = SessionProvider.openSession();
+            Object entity = entityClass.newInstance();
+            ICriteria c = mainSession.createCriteria(entity, RESULT_TYPE.MULTIPLE)
+                    .add(Restrictions.eq(FILTER_TYPE.WHERE, field, value))
+                    .execute();
+            mainSession.close();
+            return (!mainSession.getList(entity).isEmpty());
+        }
+        catch (Exception ex)
+        {
+            if (mainSession != null)
+                mainSession.close();
+            return false;
+        }
+    }
 
     public static String getPath(String folder, HttpServletRequest request)
     {

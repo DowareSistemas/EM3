@@ -5,14 +5,11 @@
  */
 package repository;
 
-import interfaces.IClientes;
-import model.Clientes;
-
 /**
  *
  * @author Marcos Vinícius
  */
-public class ClientesRepository extends Repository<Clientes> implements IClientes
+public class ClientesRepository
 {
-    
+
 }

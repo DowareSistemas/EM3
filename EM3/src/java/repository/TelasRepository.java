@@ -7,7 +7,6 @@ package repository;
 
 import br.com.persistor.enums.RESULT_TYPE;
 import br.com.persistor.interfaces.Session;
-import interfaces.ITelas;
 import java.util.List;
 import model.Telas;
 import sessionProvider.SessionProvider;
@@ -16,7 +15,7 @@ import sessionProvider.SessionProvider;
  *
  * @author Marcos Vinícius
  */
-public class TelasRepository extends Repository<Telas> implements ITelas
+public class TelasRepository 
 {
     public List<Telas> listAll()
     {

@@ -15,10 +15,10 @@ import repository.EnderecosRepository;
  */
 public class EnderecosController
 {
-    static EnderecosRepository db = new EnderecosRepository();
+    EnderecosRepository db = new EnderecosRepository();
     
-    public static void delete(Enderecos endereco, Session session)
+    public void delete(Enderecos endereco, Session session)
     {
-        db.remove(endereco, session);
+       session.delete(endereco);
     }
 }

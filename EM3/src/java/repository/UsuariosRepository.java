@@ -15,9 +15,7 @@ import br.com.persistor.interfaces.Session;
 import controllers.Grupos_usuariosController;
 import controllers.Utility;
 import enums.TipoPermissao;
-import interfaces.IUsuarios;
 import java.util.List;
-import model.Caixas;
 import model.Funcionarios;
 import model.Grupos_usuarios;
 import model.Movimentacoes_caixas;
@@ -30,7 +28,7 @@ import sessionProvider.SessionProvider;
  *
  * @author Marcos Vinícius
  */
-public class UsuariosRepository extends Repository<Usuarios> implements IUsuarios
+public class UsuariosRepository 
 {
 
     private String message = "";
@@ -48,7 +46,7 @@ public class UsuariosRepository extends Repository<Usuarios> implements IUsuario
 
     public boolean validaPermissao(String tela, int usuario, int tipo_permissao)
     {
-        Grupos_usuarios grupo = Grupos_usuariosController.findByUsuario(usuario);
+        Grupos_usuarios grupo = new Grupos_usuariosController().findByUsuario(usuario);
         Permissoes permissoes = new Permissoes();
 
         Session session = SessionProvider.openSession();

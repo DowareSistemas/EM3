@@ -20,7 +20,7 @@ public class main
     {
         try
         {
-            FornecedoresController.search("");
+        //    FornecedoresController.search("");
         }
         catch (Exception ex)
         {

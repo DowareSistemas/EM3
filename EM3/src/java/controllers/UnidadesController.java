@@ -5,6 +5,7 @@
  */
 package controllers;
 
+import br.com.persistor.interfaces.Session;
 import java.util.List;
 import javax.validation.Valid;
 import model.Unidades;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import repository.UnidadesRepository;
+import sessionProvider.SessionProvider;
 
 /**
  *
@@ -23,10 +25,10 @@ import repository.UnidadesRepository;
 public class UnidadesController
 {
 
-    static UnidadesRepository db = new UnidadesRepository();
+    UnidadesRepository db = new UnidadesRepository();
 
     @RequestMapping(value = "und-search", produces = "application/json; charset=utf-8")
-    public static @ResponseBody
+    public @ResponseBody
     String search(@RequestParam(value = "query") String searchTerm)
     {
         List<Unidades> unidades;
@@ -42,11 +44,12 @@ public class UnidadesController
     }
 
     @RequestMapping(value = "und-get", produces = "application/json; charset=utf-8")
-    public static @ResponseBody
+    public @ResponseBody
     String get(@RequestParam(value = "id") int id)
     {
-        Unidades unidade = db.get(Unidades.class, id);
-        db.close();
+        Session session = SessionProvider.openSession();
+        Unidades unidade = session.onID(Unidades.class, id);
+        session.close();
 
         if (unidade.getId() == 0)
             return new OperationResult(StatusRetorno.NAO_ENCONTRADO, "Unidade não localizada", "").toJson();
@@ -55,7 +58,7 @@ public class UnidadesController
     }
 
     @RequestMapping(value = "und-save", produces = "application/json; charset=utf-8")
-    public static @ResponseBody
+    public @ResponseBody
     String save(@Valid Unidades unidade, BindingResult result)
     {
         if (result.hasErrors())
@@ -63,17 +66,20 @@ public class UnidadesController
 
         unidade.setSigla(unidade.getSigla().toUpperCase());
 
-        if (db.exists(Unidades.class, "id", unidade.getId()))
-            db.merge(unidade);
+        Session session = SessionProvider.openSession();
+
+        if (Utility.exists(Unidades.class, "id", unidade.getId()))
+            session.update(unidade);
         else
         {
             if (db.getBySigla(unidade.getSigla()).getId() > 0)
                 return new OperationResult(StatusRetorno.FALHA_VALIDACAO, "Já existe uma unidade com esta sigla. Escolha outra sigla e tente novamente.", "").toJson();
 
-            db.add(unidade);
+            session.save(unidade);
         }
 
-        db.commit(true);
+        session.commit();
+        session.close();
 
         if (unidade.saved || unidade.updated)
             return new OperationResult(StatusRetorno.OPERACAO_OK, "Unidade salva.", "").toJson();
@@ -82,10 +88,11 @@ public class UnidadesController
     }
 
     @RequestMapping(value = "und-del", produces = "application/json; charset=utf-8")
-    public static @ResponseBody
+    public @ResponseBody
     String delete(@RequestParam(value = "id") int id)
     {
-        Unidades unidade = db.get(Unidades.class, id);
+        Session session = SessionProvider.openSession();
+        Unidades unidade = session.onID(Unidades.class, id);
 
         if (unidade.getId() == 0)
             return new OperationResult(StatusRetorno.NAO_ENCONTRADO, "Unidade não localizada", "").toJson();
@@ -93,8 +100,9 @@ public class UnidadesController
         if (db.isValidDelete(id))
             return new OperationResult(StatusRetorno.FALHA_VALIDACAO, "Esta unidade não pode ser removida. Existem um ou mais produtos relacionados a ela.", "").toJson();
 
-        db.remove(unidade);
-        db.commit(true);
+        session.delete(unidade);
+        session.commit();
+        session.close();
 
         if (unidade.deleted)
             return new OperationResult(StatusRetorno.OPERACAO_OK, "Unidade removida", "").toJson();

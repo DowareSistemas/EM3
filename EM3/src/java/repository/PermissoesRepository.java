@@ -5,8 +5,11 @@
  */
 package repository;
 
+import br.com.persistor.enums.FILTER_TYPE;
+import br.com.persistor.enums.RESULT_TYPE;
+import br.com.persistor.generalClasses.Restrictions;
 import br.com.persistor.interfaces.Session;
-import interfaces.IPermissoes;
+import java.util.List;
 import model.Permissoes;
 import sessionProvider.SessionProvider;
 
@@ -14,7 +17,19 @@ import sessionProvider.SessionProvider;
  *
  * @author Marcos Vinícius
  */
-public class PermissoesRepository extends Repository<Permissoes> implements IPermissoes
+public class PermissoesRepository 
 {
-    
+
+    public List<Permissoes> listByGrupo(int grupo_id)
+    {
+        Permissoes p = new Permissoes();
+        
+        Session session = SessionProvider.openSession();
+        session.createCriteria(p, RESULT_TYPE.MULTIPLE)
+                .add(Restrictions.eq(FILTER_TYPE.WHERE, "grupo_usuarios_id", grupo_id))
+                .execute();
+        session.close();
+
+        return session.getList(p);
+    }
 }

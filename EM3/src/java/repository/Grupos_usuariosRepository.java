@@ -13,10 +13,8 @@ import br.com.persistor.generalClasses.Restrictions;
 import br.com.persistor.interfaces.ICriteria;
 import br.com.persistor.interfaces.Session;
 import controllers.Utility;
-import interfaces.IGrupos_usuarios;
 import java.util.List;
 import model.Grupos_usuarios;
-import model.*;
 import model.Usuarios;
 import sessionProvider.SessionProvider;
 
@@ -24,9 +22,9 @@ import sessionProvider.SessionProvider;
  *
  * @author Marcos Vinícius
  */
-public class Grupos_usuariosRepository extends Repository<Grupos_usuarios> implements IGrupos_usuarios
+public class Grupos_usuariosRepository
 {
-
+    
     private String message = "";
 
     public Grupos_usuarios findByUsuario(int usuario_id)

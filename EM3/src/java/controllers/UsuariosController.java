@@ -7,6 +7,7 @@ package controllers;
 
 import br.com.persistor.enums.FILTER_TYPE;
 import br.com.persistor.generalClasses.Restrictions;
+import br.com.persistor.interfaces.Session;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -27,7 +28,7 @@ import sessionProvider.SessionProvider;
 public class UsuariosController
 {
 
-    static UsuariosRepository db = new UsuariosRepository();
+    UsuariosRepository db = new UsuariosRepository();
 
     @RequestMapping(value = "/usr-save", produces = "application/json; charset=utf-8")
     public @ResponseBody
@@ -36,11 +37,15 @@ public class UsuariosController
         if (result.hasErrors())
             return new OperationResult(StatusRetorno.FALHA_VALIDACAO, result.getFieldErrors().get(0).getDefaultMessage(), "").toJson();
 
-        if (db.exists(Usuarios.class, "id", usuario.getId()))
-            db.merge(usuario);
+        Session session = SessionProvider.openSession();
+
+        if (Utility.exists(Usuarios.class, "id", usuario.getId()))
+            session.update(usuario);
         else
-            db.add(usuario);
-        db.commit(true);
+            session.save(usuario);
+
+        session.commit();
+        session.close();
 
         if (usuario.saved || usuario.updated)
             return new OperationResult(StatusRetorno.OPERACAO_OK, "Usuário salvo", usuario).toJson();
@@ -49,11 +54,12 @@ public class UsuariosController
     }
 
     @RequestMapping(value = "/usr-get", produces = "application/json; charset=utf-8")
-    public static @ResponseBody
+    public @ResponseBody
     String get(@RequestParam(value = "id") int id)
     {
-        Usuarios u = db.get(Usuarios.class, id);
-        db.close();
+        Session session = SessionProvider.openSession();
+        Usuarios u = session.onID(Usuarios.class, id);
+        session.close();
 
         if (u.getId() == 0)
             return new OperationResult(StatusRetorno.NAO_ENCONTRADO, "Usuário não localizado", "").toJson();
@@ -62,28 +68,33 @@ public class UsuariosController
     }
 
     @RequestMapping(value = "/usr-rem", produces = "application/json; charset=utf-8")
-    public static @ResponseBody
+    public @ResponseBody
     String remove(@RequestParam(value = "id") int id)
     {
-        
-        Usuarios u = db.get(Usuarios.class, id);
-        if (u.getId() == 0)
-            return new OperationResult(StatusRetorno.NAO_ENCONTRADO, "Usuário não localizado", "").toJson();
+        Session session = SessionProvider.openSession();
+        Usuarios u = session.onID(Usuarios.class, id);
 
-        if(u.getId() == 1)
+        if (u.getId() == 0)
         {
-            db.close();
+            session.close();
+            return new OperationResult(StatusRetorno.NAO_ENCONTRADO, "Usuário não localizado", "").toJson();
+        }
+
+        if (u.getId() == 1)
+        {
+            session.close();
             return new OperationResult(StatusRetorno.FALHA_VALIDACAO, "O usuário 1 não pode ser excluído.", "").toJson();
         }
-        
-        if(!db.podeExcluir(id))
+
+        if (!db.podeExcluir(id))
         {
-            db.close();
+            session.close();
             return new OperationResult(StatusRetorno.FALHA_VALIDACAO, db.getMessage(), "").toJson();
         }
-        
-        db.remove(u);
-        db.commit(true);
+
+        session.delete(u);
+        session.commit();
+        session.close();
 
         if (u.deleted)
             return new OperationResult(StatusRetorno.OPERACAO_OK, "Usuário excluido", "").toJson();
@@ -92,7 +103,7 @@ public class UsuariosController
     }
 
     @RequestMapping(value = "/usr-login", produces = "application/json; charset=utf-8")
-    public static @ResponseBody
+    public @ResponseBody
     String login(Usuarios usuario, HttpServletRequest request)
     {
         SessionProvider.setConfig(request);
@@ -110,28 +121,30 @@ public class UsuariosController
      * @return
      */
     @RequestMapping(value = "/usr-count", produces = "application/json; charset=utf-8")
-    public static @ResponseBody
+    public @ResponseBody
     String count(@RequestParam(value = "tipo") int tipo)
     {
+        Session session = SessionProvider.openSession();
+        
         int count = 0;
         switch (tipo)
         {
             case 0:
 
-                count = db.count(Usuarios.class, "ativo in (0, 1)");
+                count = session.count(Usuarios.class, "ativo in (0, 1)");
                 break;
             case 1:
 
-                count = db.count(Usuarios.class, "ativo = 1");
+                count = session.count(Usuarios.class, "ativo = 1");
                 break;
 
             case 2:
 
-                count = db.count(Usuarios.class, "ativo = 0");
+                count = session.count(Usuarios.class, "ativo = 0");
                 break;
         }
 
-        db.close();
+        session.close();
         return new OperationResult(StatusRetorno.OPERACAO_OK, "", count).toJson();
     }
 
@@ -142,7 +155,7 @@ public class UsuariosController
      * @return
      */
     @RequestMapping(value = "/usr-search", produces = "application/json; charset=utf-8")
-    public static @ResponseBody
+    public @ResponseBody
     String search(@RequestParam(value = "query") String searchTerm, @RequestParam(value = "tipo") int tipo)
     {
         List<Usuarios> result;
@@ -159,11 +172,11 @@ public class UsuariosController
     }
 
     @RequestMapping(value = "/usr-validperm", produces = "application/json; charset=utf-8")
-    public static @ResponseBody
+    public @ResponseBody
     String validaPermissao(
             @RequestParam(value = "tela") String tela,
             @RequestParam(value = "usuario") int usuario,
-            @RequestParam(value = "tipo_permisao") int tipo_permissao)
+            @RequestParam(value = "tipo_permissao") int tipo_permissao)
     {
         boolean valido = db.validaPermissao(tela, usuario, tipo_permissao);
 

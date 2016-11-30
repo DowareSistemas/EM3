@@ -5,6 +5,7 @@
  */
 package controllers;
 
+import br.com.persistor.interfaces.Session;
 import com.google.gson.Gson;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
@@ -28,21 +29,24 @@ import sessionProvider.SessionProvider;
 public class EmpresasController
 {
 
-    static EmpresaRepository db = new EmpresaRepository();
+    EmpresaRepository db = new EmpresaRepository();
 
     @RequestMapping(value = "/emp-save", produces = "application/json; charset=utf-8")
-    public static @ResponseBody
+    public @ResponseBody
     String save(@Valid Empresa emp, BindingResult result)
     {
         if (result.hasErrors())
             return new OperationResult(StatusRetorno.FALHA_VALIDACAO, result.getFieldErrors().get(0).getDefaultMessage(), "").toJson();
 
-        if (db.exists(Empresa.class, "id", emp.getId()))
-            db.merge(emp);
+        Session session = SessionProvider.openSession();
+        
+        if (Utility.exists(Empresa.class, "id", emp.getId()))
+            session.update(emp);
         else
-            db.add(emp);
+            session.save(emp);
 
-        db.commit(true);
+        session.commit();
+        session.close();
 
         if (emp.saved || emp.updated)
             return new OperationResult(StatusRetorno.OPERACAO_OK, "Empresa salva", "").toJson();
@@ -51,7 +55,7 @@ public class EmpresasController
     }
 
     @RequestMapping(value = "/emp-search", produces = "application/json; charset=utf-8")
-    public static @ResponseBody
+    public @ResponseBody
     String search(@RequestParam(value = "query") String searchTerm, HttpServletRequest request)
     {
         SessionProvider.setConfig(request);
@@ -69,11 +73,12 @@ public class EmpresasController
     }
 
     @RequestMapping(value = "/emp-find", produces = "application/json; charset=utf-8")
-    public static @ResponseBody
+    public @ResponseBody
     String find(@RequestParam(value = "id") int id)
     {
-        Empresa e = db.get(Empresa.class, id);
-        db.close();
+        Session session = SessionProvider.openSession();
+        Empresa e = session.onID(Empresa.class, id);
+        session.close();
 
         if (e.getId() == 0)
             return new OperationResult(StatusRetorno.NAO_ENCONTRADO, "Empresa não localizada", "").toJson();

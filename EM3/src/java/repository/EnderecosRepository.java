@@ -5,14 +5,11 @@
  */
 package repository;
 
-import interfaces.IEnderecos;
-import model.Enderecos;
-
 /**
  *
  * @author Marcos Vinícius
  */
-public class EnderecosRepository extends Repository<Enderecos> implements IEnderecos
+public class EnderecosRepository 
 {
     
 }

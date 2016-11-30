@@ -5,6 +5,7 @@
  */
 package controllers;
 
+import br.com.persistor.interfaces.Session;
 import java.util.List;
 import javax.validation.Valid;
 import model.Grupos_usuarios;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import repository.Grupos_usuariosRepository;
+import sessionProvider.SessionProvider;
 
 /**
  *
@@ -24,15 +26,15 @@ import repository.Grupos_usuariosRepository;
 public class Grupos_usuariosController
 {
 
-    static Grupos_usuariosRepository db = new Grupos_usuariosRepository();
+    Grupos_usuariosRepository db = new Grupos_usuariosRepository();
 
-    public static Grupos_usuarios findByUsuario(int usuario_id)
+    public Grupos_usuarios findByUsuario(int usuario_id)
     {
         return db.findByUsuario(usuario_id);
     }
 
     @RequestMapping(value = "/gusr-search", produces = "application/json; charset=utf-8")
-    public static @ResponseBody
+    public @ResponseBody
     String search(@RequestParam(value = "query") String searchTerm)
     {
         List<Grupos_usuarios> result;
@@ -49,11 +51,12 @@ public class Grupos_usuariosController
     }
 
     @RequestMapping(value = "/gusr-get", produces = "application/json; charset=utf-8")
-    public static @ResponseBody
+    public @ResponseBody
     String get(@RequestParam(value = "id") int id)
     {
-        Grupos_usuarios gu = db.get(Grupos_usuarios.class, id);
-        db.close();
+        Session session = SessionProvider.openSession();
+        Grupos_usuarios gu = session.onID(Grupos_usuarios.class, id);
+        session.close();
 
         if (gu.getId() == 0)
             return new OperationResult(StatusRetorno.NAO_ENCONTRADO, "Grupo não encontrado.", "").toJson();
@@ -62,18 +65,21 @@ public class Grupos_usuariosController
     }
 
     @RequestMapping(value = "/gusr-save", produces = "application/json; charset=utf-8")
-    public static @ResponseBody
+    public @ResponseBody
     String save(@Valid Grupos_usuarios grupo, BindingResult result)
     {
         if (result.hasErrors())
             return new OperationResult(StatusRetorno.FALHA_VALIDACAO, result.getFieldErrors().get(0).getDefaultMessage(), "").toJson();
 
-        if (db.exists(Grupos_usuarios.class, "id", grupo.getId()))
-            db.merge(grupo);
+        Session session  = SessionProvider.openSession();
+        
+        if (Utility.exists(Grupos_usuarios.class, "id", grupo.getId()))
+            session.update(grupo);
         else
-            db.add(grupo);
+            session.save(grupo);
 
-        db.commit(true);
+        session.commit();
+        session.close();
 
         if (grupo.saved || grupo.updated)
             return new OperationResult(StatusRetorno.OPERACAO_OK, "Grupo salvo com sucesso.", "").toJson();
@@ -82,10 +88,11 @@ public class Grupos_usuariosController
     }
 
     @RequestMapping(value = "/gusr-rem", produces = "application/json; charset=utf-8")
-    public static @ResponseBody
+    public @ResponseBody
     String delete(@RequestParam(value = "id") int id)
     {
-        Grupos_usuarios grupo = db.get(Grupos_usuarios.class, id);
+        Session session = SessionProvider.openSession();
+        Grupos_usuarios grupo = session.onID(Grupos_usuarios.class, id);
 
         if (grupo.getId() == 0)
             return new OperationResult(StatusRetorno.NAO_ENCONTRADO, "Grupo de usuários não localizado.", "").toJson();
@@ -93,10 +100,11 @@ public class Grupos_usuariosController
         if (!db.podeExcluir(grupo.getId()))
             return new OperationResult(StatusRetorno.FALHA_VALIDACAO, db.getMessage(), "").toJson();
 
-        if (PermissoesController.removeAll(db.getCurrentSession(), "grupo_usuarios_id = " + id))
+        if (new PermissoesController().removeAll(session, "grupo_usuarios_id = " + id))
         {
-            db.remove(grupo);
-            db.commit(true);
+            session.delete(grupo);
+            session.commit();
+            session.close();
         }
 
         if (grupo.deleted)

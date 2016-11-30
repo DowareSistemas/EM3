@@ -18,10 +18,10 @@ import repository.TelasRepository;
 public class TelasController
 {
 
-    static TelasRepository db = new TelasRepository();
+    TelasRepository db = new TelasRepository();
 
     @RequestMapping(value = "telas-list", produces = "application/json; charset=utf-8")
-    public static @ResponseBody
+    public @ResponseBody
     String listAll()
     {
         return new OperationResult(StatusRetorno.OPERACAO_OK, "", db.listAll()).toJson();
