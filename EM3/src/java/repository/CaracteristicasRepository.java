@@ -49,7 +49,7 @@ public class CaracteristicasRepository
         c.add(Restrictions.like(FILTER_TYPE.WHERE, "atributo", searchTerm, MATCH_MODE.ANYWHERE));
         c.add(Restrictions.like(FILTER_TYPE.OR, "valor", searchTerm, MATCH_MODE.ANYWHERE));
         if (Utility.tryParse(searchTerm) > 0)
-            c.add(Restrictions.eq(FILTER_TYPE.OR, "id", Utility.tryParse(searchTerm) > 0));
+            c.add(Restrictions.eq(FILTER_TYPE.OR, "id", Utility.tryParse(searchTerm)));
         c.execute();
         session.close();
         
