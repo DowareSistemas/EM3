@@ -1,9 +1,8 @@
 
 /* AUTO-GENERATED CLASS */
-/* DOES NOT ADD ACCESSOR METHODS */
-/* DOES NOT CHANGE NAME OF ACCESSOR METHODS */
+ /* DOES NOT ADD ACCESSOR METHODS */
+ /* DOES NOT CHANGE NAME OF ACCESSOR METHODS */
 package model;
-
 
 import java.math.BigDecimal;
 import br.com.persistor.abstractClasses.Entity;
@@ -20,263 +19,298 @@ import java.io.InputStream;
 /**
  *
  * @author Persistor4J
- */ 
-
-public class Produtos extends Entity 
+ */
+public class Produtos extends Entity
 {
-   private int id; 
-   private String ean; 
-   private String referencia; 
-   private String descricao; 
-   private String ncm; 
-   private String anp; 
-   private String data_cadastro; 
-   private String ultima_alteracao; 
-   private boolean fabricado; 
-   private boolean insumo; 
-   private boolean fracionado; 
-   private boolean inativo; 
-   private boolean para_balanca; 
-   private String marca; 
-   private String fabricante; 
-   private String cod_fabricante; 
-   private int unidade1; 
-   private Unidades unidades; 
-   private int fator_conversao; 
-   private int unidade2; 
-   private BigDecimal custo_medio; 
-   private int classes_imposto_id; 
-   private int cest_id; 
 
-   public void setId(int id)
-   {
-       this.id = id;
-   }
- 
-   @PrimaryKey(increment = INCREMENT.MANUAL)
-   public int getId()
-   {
-       return id;
-   }
+    private int id;
+    private String ean;
+    private String referencia;
+    private String descricao;
+    private String ncm;
+    private String anp;
+    private String data_cadastro;
+    private String ultima_alteracao;
+    private boolean fabricado;
+    private boolean insumo;
+    private boolean fracionado;
+    private boolean inativo;
+    private boolean para_balanca;
+    private String marca;
+    private String fabricante;
+    private String cod_fabricante;
+    private int unidade1;
+    private Unidades unidades;
+    private int fator_conversao;
+    private int unidade2;
+    private BigDecimal custo_medio;
+    private int classes_imposto_id;
+    private int cest_id;
+    private int grupo_produtos_id;
+    private int validade;
 
-   public void setEan(String ean)
-   {
-       this.ean = ean;
-   }
- 
-   public String getEan()
-   {
-       return ean;
-   }
+    private Grupos_usuarios grupos_usuarios;
 
-   public void setReferencia(String referencia)
-   {
-       this.referencia = referencia;
-   }
- 
-   public String getReferencia()
-   {
-       return referencia;
-   }
+    @OneToOne(source = "grupo_produtos_id", target = "id", join_type = JOIN_TYPE.LEFT, load = LOAD.AUTO)
+    public Grupos_usuarios getGrupos_usuarios()
+    {
+        return grupos_usuarios;
+    }
 
-   public void setDescricao(String descricao)
-   {
-       this.descricao = descricao;
-   }
- 
-   public String getDescricao()
-   {
-       return descricao;
-   }
+    public void setGrupos_usuarios(Grupos_usuarios grupos_usuarios)
+    {
+        this.grupos_usuarios = grupos_usuarios;
+    }
 
-   public void setNcm(String ncm)
-   {
-       this.ncm = ncm;
-   }
- 
-   public String getNcm()
-   {
-       return ncm;
-   }
+    public int getGrupo_produtos_id()
+    {
+        return grupo_produtos_id;
+    }
 
-   public void setAnp(String anp)
-   {
-       this.anp = anp;
-   }
- 
-   public String getAnp()
-   {
-       return anp;
-   }
+    public void setGrupo_produtos_id(int grupo_produtos_id)
+    {
+        this.grupo_produtos_id = grupo_produtos_id;
+    }
 
-   public void setData_cadastro(String data_cadastro)
-   {
-       this.data_cadastro = data_cadastro;
-   }
- 
-   public String getData_cadastro()
-   {
-       return data_cadastro;
-   }
+    public int getValidade()
+    {
+        return validade;
+    }
 
-   public void setUltima_alteracao(String ultima_alteracao)
-   {
-       this.ultima_alteracao = ultima_alteracao;
-   }
- 
-   public String getUltima_alteracao()
-   {
-       return ultima_alteracao;
-   }
+    public void setValidade(int validade)
+    {
+        this.validade = validade;
+    }
 
-   public void setFabricado(boolean fabricado)
-   {
-       this.fabricado = fabricado;
-   }
- 
-   public boolean isFabricado()
-   {
-       return fabricado;
-   }
+    public void setId(int id)
+    {
+        this.id = id;
+    }
 
-   public void setInsumo(boolean insumo)
-   {
-       this.insumo = insumo;
-   }
- 
-   public boolean isInsumo()
-   {
-       return insumo;
-   }
+    @PrimaryKey(increment = INCREMENT.MANUAL)
+    public int getId()
+    {
+        return id;
+    }
 
-   public void setFracionado(boolean fracionado)
-   {
-       this.fracionado = fracionado;
-   }
- 
-   public boolean isFracionado()
-   {
-       return fracionado;
-   }
+    public void setEan(String ean)
+    {
+        this.ean = ean;
+    }
 
-   public void setInativo(boolean inativo)
-   {
-       this.inativo = inativo;
-   }
- 
-   public boolean isInativo()
-   {
-       return inativo;
-   }
+    public String getEan()
+    {
+        return ean;
+    }
 
-   public void setPara_balanca(boolean para_balanca)
-   {
-       this.para_balanca = para_balanca;
-   }
- 
-   public boolean isPara_balanca()
-   {
-       return para_balanca;
-   }
+    public void setReferencia(String referencia)
+    {
+        this.referencia = referencia;
+    }
 
-   public void setMarca(String marca)
-   {
-       this.marca = marca;
-   }
- 
-   public String getMarca()
-   {
-       return marca;
-   }
+    public String getReferencia()
+    {
+        return referencia;
+    }
 
-   public void setFabricante(String fabricante)
-   {
-       this.fabricante = fabricante;
-   }
- 
-   public String getFabricante()
-   {
-       return fabricante;
-   }
+    public void setDescricao(String descricao)
+    {
+        this.descricao = descricao;
+    }
 
-   public void setCod_fabricante(String cod_fabricante)
-   {
-       this.cod_fabricante = cod_fabricante;
-   }
- 
-   public String getCod_fabricante()
-   {
-       return cod_fabricante;
-   }
+    public String getDescricao()
+    {
+        return descricao;
+    }
 
- 
-   public void setUnidades(Unidades unidades)
-   {
-       this.unidades = unidades;
-   }
-   public void setUnidade1(int unidade1)
-   {
-       this.unidade1 = unidade1;
-   }
- 
-   public int getUnidade1()
-   {
-       return unidade1;
-   }
+    public void setNcm(String ncm)
+    {
+        this.ncm = ncm;
+    }
 
-   @OneToOne(source = "unidade1", target = "id" , load = LOAD.AUTO, join_type = JOIN_TYPE.INNER)
-   public Unidades getUnidades()
-   {
-       return unidades;
-   }
+    public String getNcm()
+    {
+        return ncm;
+    }
 
-   public void setFator_conversao(int fator_conversao)
-   {
-       this.fator_conversao = fator_conversao;
-   }
- 
-   public int getFator_conversao()
-   {
-       return fator_conversao;
-   }
+    public void setAnp(String anp)
+    {
+        this.anp = anp;
+    }
 
-   public void setUnidade2(int unidade2)
-   {
-       this.unidade2 = unidade2;
-   }
- 
-   public int getUnidade2()
-   {
-       return unidade2;
-   }
+    public String getAnp()
+    {
+        return anp;
+    }
 
-   public void setCusto_medio(BigDecimal custo_medio)
-   {
-       this.custo_medio = custo_medio;
-   }
- 
-   public BigDecimal getCusto_medio()
-   {
-       return custo_medio;
-   }
+    public void setData_cadastro(String data_cadastro)
+    {
+        this.data_cadastro = data_cadastro;
+    }
 
-   public void setClasses_imposto_id(int classes_imposto_id)
-   {
-       this.classes_imposto_id = classes_imposto_id;
-   }
- 
-   public int getClasses_imposto_id()
-   {
-       return classes_imposto_id;
-   }
+    public String getData_cadastro()
+    {
+        return data_cadastro;
+    }
 
-   public void setCest_id(int cest_id)
-   {
-       this.cest_id = cest_id;
-   }
- 
-   public int getCest_id()
-   {
-       return cest_id;
-   }
+    public void setUltima_alteracao(String ultima_alteracao)
+    {
+        this.ultima_alteracao = ultima_alteracao;
+    }
+
+    public String getUltima_alteracao()
+    {
+        return ultima_alteracao;
+    }
+
+    public void setFabricado(boolean fabricado)
+    {
+        this.fabricado = fabricado;
+    }
+
+    public boolean isFabricado()
+    {
+        return fabricado;
+    }
+
+    public void setInsumo(boolean insumo)
+    {
+        this.insumo = insumo;
+    }
+
+    public boolean isInsumo()
+    {
+        return insumo;
+    }
+
+    public void setFracionado(boolean fracionado)
+    {
+        this.fracionado = fracionado;
+    }
+
+    public boolean isFracionado()
+    {
+        return fracionado;
+    }
+
+    public void setInativo(boolean inativo)
+    {
+        this.inativo = inativo;
+    }
+
+    public boolean isInativo()
+    {
+        return inativo;
+    }
+
+    public void setPara_balanca(boolean para_balanca)
+    {
+        this.para_balanca = para_balanca;
+    }
+
+    public boolean isPara_balanca()
+    {
+        return para_balanca;
+    }
+
+    public void setMarca(String marca)
+    {
+        this.marca = marca;
+    }
+
+    public String getMarca()
+    {
+        return marca;
+    }
+
+    public void setFabricante(String fabricante)
+    {
+        this.fabricante = fabricante;
+    }
+
+    public String getFabricante()
+    {
+        return fabricante;
+    }
+
+    public void setCod_fabricante(String cod_fabricante)
+    {
+        this.cod_fabricante = cod_fabricante;
+    }
+
+    public String getCod_fabricante()
+    {
+        return cod_fabricante;
+    }
+
+    public void setUnidades(Unidades unidades)
+    {
+        this.unidades = unidades;
+    }
+
+    public void setUnidade1(int unidade1)
+    {
+        this.unidade1 = unidade1;
+    }
+
+    public int getUnidade1()
+    {
+        return unidade1;
+    }
+
+    @OneToOne(source = "unidade1", target = "id", load = LOAD.AUTO, join_type = JOIN_TYPE.INNER)
+    public Unidades getUnidades()
+    {
+        return unidades;
+    }
+
+    public void setFator_conversao(int fator_conversao)
+    {
+        this.fator_conversao = fator_conversao;
+    }
+
+    public int getFator_conversao()
+    {
+        return fator_conversao;
+    }
+
+    public void setUnidade2(int unidade2)
+    {
+        this.unidade2 = unidade2;
+    }
+
+    public int getUnidade2()
+    {
+        return unidade2;
+    }
+
+    public void setCusto_medio(BigDecimal custo_medio)
+    {
+        this.custo_medio = custo_medio;
+    }
+
+    public BigDecimal getCusto_medio()
+    {
+        return custo_medio;
+    }
+
+    public void setClasses_imposto_id(int classes_imposto_id)
+    {
+        this.classes_imposto_id = classes_imposto_id;
+    }
+
+    public int getClasses_imposto_id()
+    {
+        return classes_imposto_id;
+    }
+
+    public void setCest_id(int cest_id)
+    {
+        this.cest_id = cest_id;
+    }
+
+    public int getCest_id()
+    {
+        return cest_id;
+    }
 }
