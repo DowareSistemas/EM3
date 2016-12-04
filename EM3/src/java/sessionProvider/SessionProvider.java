@@ -32,7 +32,6 @@ public class SessionProvider
     {
         config = ConfigurationController.getConfig(request);
         config.setPersistenceLogger(PersistenceLogger.class);
-        config.setMaxPoolSize(10);
     }
 
     public static Session openSession()

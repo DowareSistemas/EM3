@@ -31,6 +31,7 @@
                             <label class="h5"> Banco de dados </label>
                             <select class="form-control" name="db_type">
                                 <option value="SQLServer"> Microsoft SQL Server </option>
+                                <option value="ORACLE"> Oracle 11g </option>
                                 <option value="MySQL"> MySQL </option>
                                 <option value="FirebirdSQL"> FirebirdSQL </option>
                                 <option value="PostgreSQL"> PostgreSQL </option>

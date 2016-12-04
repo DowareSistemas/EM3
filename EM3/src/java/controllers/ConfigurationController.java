@@ -114,6 +114,8 @@ public class ConfigurationController
                 config.setDb_type(DB_TYPE.FirebirdSQL);
             if (db.equals("PostgreSQL"))
                 config.setDb_type(DB_TYPE.PostgreSQL);
+            if(db.equals("ORACLE"))
+                config.setDb_type(DB_TYPE.ORACLE);
 
             config.setHost(p.getProperty("prop.server"));
             config.setPort(Integer.parseInt(p.getProperty("prop.port")));
