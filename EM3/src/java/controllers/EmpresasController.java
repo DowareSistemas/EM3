@@ -39,7 +39,7 @@ public class EmpresasController
             return new OperationResult(StatusRetorno.FALHA_VALIDACAO, result.getFieldErrors().get(0).getDefaultMessage(), "").toJson();
 
         Session session = SessionProvider.openSession();
-        
+
         if (Utility.exists(Empresa.class, "id", emp.getId()))
             session.update(emp);
         else
@@ -59,6 +59,10 @@ public class EmpresasController
     String search(@RequestParam(value = "query") String searchTerm, HttpServletRequest request)
     {
         SessionProvider.setConfig(request);
+
+        if (!SessionProvider.databaseHasConfigured())
+            return new OperationResult(StatusRetorno.OPERACAO_OK, "no_tables", "0").toJson();
+
         List<Empresa> empresas;
 
         if (searchTerm.isEmpty())
@@ -77,7 +81,10 @@ public class EmpresasController
     String find(@RequestParam(value = "id") int id, HttpServletRequest request)
     {
         SessionProvider.setConfig(request);
-        
+
+        if (!SessionProvider.databaseHasConfigured())
+            return new OperationResult(StatusRetorno.OPERACAO_OK, "no_tables", "0").toJson();
+
         Session session = SessionProvider.openSession();
         Empresa e = session.onID(Empresa.class, id);
         session.close();

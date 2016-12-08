@@ -107,6 +107,10 @@ public class UsuariosController
     String login(Usuarios usuario, HttpServletRequest request)
     {
         SessionProvider.setConfig(request);
+        
+        if(!SessionProvider.databaseHasConfigured())
+            return new OperationResult(StatusRetorno.OPERACAO_OK, "no_tables", "0").toJson();
+        
         usuario = db.efetuaLogin(usuario);
 
         if (usuario.getId() > 0)

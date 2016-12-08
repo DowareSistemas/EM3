@@ -9,6 +9,8 @@ import br.com.persistor.generalClasses.DBConfig;
 import br.com.persistor.interfaces.Session;
 import br.com.persistor.sessionManager.SessionFactory;
 import controllers.ConfigurationController;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import javax.servlet.http.HttpServletRequest;
 import loggers.PersistenceLogger;
 
@@ -22,6 +24,45 @@ public class SessionProvider
     private static SessionFactory factory = null;
     private static DBConfig config;
 
+    public static boolean databaseHasConfigured()
+    {
+        ResultSet rs = null;
+        PreparedStatement ps = null;
+        try
+        {
+            boolean result = false;
+            ps = openSession().getActiveConnection().prepareStatement("select * from usuarios");
+          
+            rs = ps.executeQuery();
+            
+            result = rs.next();
+            rs.close();
+            ps.close();
+            
+            return true;
+        }
+        catch(Exception ex)
+        {
+            closePsRs(rs, ps);
+            return false;
+        }
+    }
+    
+    private static void closePsRs(ResultSet rs, PreparedStatement ps)
+    {
+        try
+        {
+            if(rs != null)
+                rs.close();
+            if(ps != null)
+                ps.close();
+        }
+        catch(Exception ex)
+        {
+            
+        }
+    }
+    
     public static void setConfig(DBConfig dBConfig)
     {
         config = dBConfig;

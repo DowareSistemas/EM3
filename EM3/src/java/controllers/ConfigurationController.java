@@ -7,12 +7,14 @@ package controllers;
 
 import br.com.persistor.enums.DB_TYPE;
 import br.com.persistor.generalClasses.DBConfig;
+import br.com.persistor.interfaces.Session;
 import com.google.gson.Gson;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.InputStream;
+import java.sql.PreparedStatement;
 import java.util.Properties;
 import javax.servlet.http.HttpServletRequest;
 import loggers.PersistenceLogger;
@@ -56,6 +58,13 @@ public class ConfigurationController
             return "0";
     }
 
+    @RequestMapping("/getdb_type")
+    public @ResponseBody
+    String getDb(HttpServletRequest request)
+    {
+        return new OperationResult(StatusRetorno.OPERACAO_OK, getConfig(request).getDb_type().toString(), "").toJson();
+    }
+
     @RequestMapping("/saveconfig")
     public @ResponseBody
     String save(DBConfig config, HttpServletRequest request)
@@ -91,6 +100,28 @@ public class ConfigurationController
         return "0";
     }
 
+    @RequestMapping(value = "ps_execute", produces = "application/json; charset=utf-8")
+    public @ResponseBody
+    String executeSqlQuery(@RequestParam(value = "query") String query)
+    {
+        Session session = SessionProvider.openSession();
+        try
+        {
+            PreparedStatement ps = session.getActiveConnection().prepareStatement(query);
+            ps.execute();
+            session.commit();
+            ps.close();
+            session.close();
+            return new OperationResult(StatusRetorno.OPERACAO_OK, "", "").toJson();
+        }
+        catch (Exception ex)
+        {
+            ex.printStackTrace();
+            session.close();
+            return new OperationResult(StatusRetorno.FALHA_INTERNA, "Ocorreu um problema durante a criação do banco de dados. Acione o suporte Doware.", "").toJson();
+        }
+    }
+
     public static DBConfig getConfig(HttpServletRequest request)
     {
         try
@@ -114,7 +145,7 @@ public class ConfigurationController
                 config.setDb_type(DB_TYPE.FirebirdSQL);
             if (db.equals("PostgreSQL"))
                 config.setDb_type(DB_TYPE.PostgreSQL);
-            if(db.equals("ORACLE"))
+            if (db.equals("ORACLE"))
                 config.setDb_type(DB_TYPE.ORACLE);
 
             config.setHost(p.getProperty("prop.server"));
