@@ -26,16 +26,22 @@ public class Tipos_movimentoController
 {
     Tipos_movimentoRepository db = new Tipos_movimentoRepository();
 
+    /**
+     * 
+     * @param searchTerm termo de busca
+     * @param tipo 0 - somente inativos; 1 - somente ativos; 2 - todos
+     * @return 
+     */
     @RequestMapping(value = "tmv-search", produces="application/json; charset=utf-8")
     public @ResponseBody
-    String search(@RequestParam(value = "query") String searchTerm)
+    String search(@RequestParam(value = "query") String searchTerm, @RequestParam(value = "tipo") int tipo)
     {
         List<Tipos_movimento> result;
         
         if(searchTerm.isEmpty())
-            result = db.listAll();
+            result = db.listAll(tipo);
         else
-            result = db.search(searchTerm);
+            result = db.search(searchTerm, tipo);
         
         return (result.isEmpty()
                 ? new OperationResult(StatusRetorno.NAO_ENCONTRADO, "Nenhum registro encontrado", "").toJson()
