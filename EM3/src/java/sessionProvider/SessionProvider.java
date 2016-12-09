@@ -26,23 +26,26 @@ public class SessionProvider
 
     public static boolean databaseHasConfigured()
     {
+        Session session = openSession();
         ResultSet rs = null;
         PreparedStatement ps = null;
         try
         {
             boolean result = false;
-            ps = openSession().getActiveConnection().prepareStatement("select * from usuarios");
-          
+            
+            ps = session.getActiveConnection().prepareStatement("select * from usuarios");
             rs = ps.executeQuery();
             
             result = rs.next();
             rs.close();
             ps.close();
+            session.close();
             
-            return true;
+            return result;
         }
         catch(Exception ex)
         {
+            session.close();
             closePsRs(rs, ps);
             return false;
         }

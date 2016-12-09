@@ -43,7 +43,7 @@ public class Itens_movimento extends Entity
    private BigDecimal total_pis; 
    private BigDecimal base_cofins; 
    private BigDecimal total_cofins; 
-   private int cfop_id; 
+   private String cfop_id; 
    private Cfop cfop; 
    private int icms_perc; 
    private int icms_perc_st; 
@@ -252,12 +252,12 @@ public class Itens_movimento extends Entity
    {
        this.cfop = cfop;
    }
-   public void setCfop_id(int cfop_id)
+   public void setCfop_id(String cfop_id)
    {
        this.cfop_id = cfop_id;
    }
  
-   public int getCfop_id()
+   public String getCfop_id()
    {
        return cfop_id;
    }

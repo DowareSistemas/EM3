@@ -26,7 +26,8 @@
             <param-name>forceEncoding</param-name>  
             <param-value>true</param-value>  
         </init-param>  
-    </filter>  
+    </filter> 
+    
     <filter-mapping>  
         <filter-name>encodingFilter</filter-name>  
         <url-pattern>/*</url-pattern>  
@@ -37,6 +38,4 @@
         <url-pattern>/</url-pattern>
     </servlet-mapping>
     
-
-
 </web-app>

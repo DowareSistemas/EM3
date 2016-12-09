@@ -41,7 +41,7 @@ public class Operacoes_classe_imposto extends Entity
    private Classes_imposto classes_imposto; 
    private int tipos_movimento_id; 
    private Tipos_movimento tipos_movimento; 
-   private int cfop_id; 
+   private String cfop_id; 
    private Cfop cfop; 
 
    public void setId(int id)
@@ -222,12 +222,12 @@ public class Operacoes_classe_imposto extends Entity
    {
        this.cfop = cfop;
    }
-   public void setCfop_id(int cfop_id)
+   public void setCfop_id(String cfop_id)
    {
        this.cfop_id = cfop_id;
    }
  
-   public int getCfop_id()
+   public String getCfop_id()
    {
        return cfop_id;
    }

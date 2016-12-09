@@ -5,17 +5,12 @@
 package model;
 
 
-import java.math.BigDecimal;
-import br.com.persistor.abstractClasses.Entity;
 import br.com.persistor.abstractClasses.Entity;
 import br.com.persistor.annotations.PrimaryKey;
 import br.com.persistor.enums.INCREMENT;
-import br.com.persistor.annotations.OneToOne;
-import br.com.persistor.annotations.OneToMany;
-import br.com.persistor.enums.JOIN_TYPE;
-import br.com.persistor.enums.LOAD;
-import java.util.Date;
-import java.io.InputStream;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+import org.hibernate.validator.constraints.NotEmpty;
 
 /**
  *
@@ -25,7 +20,15 @@ import java.io.InputStream;
 public class Classes_imposto extends Entity 
 {
    private int id; 
+   
+   @NotNull(message = "O nome é obrigatório")
+   @NotEmpty(message = "O nome é obrigatório")
+   @Size(max = 100, message = "O nome não pode possuir mais de 100 caracteres")
    private String nome; 
+ 
+   @NotNull(message = "A data de alteração é obrigatória")
+   @NotEmpty(message = "A data de alteração é obrigatória")
+   @Size(max = 19, message = "A data de alteração não pode conter mais de 19 caracteres")
    private String data_alteracao; 
 
    public void setId(int id)

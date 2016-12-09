@@ -24,38 +24,38 @@ import java.io.InputStream;
 
 public class Cfop extends Entity 
 {
-   private int id; 
-   private int codigo_fiscal; 
-   private String descricao; 
+    private String id;
+    private String descricao;
+    private String aplicacao;
 
-   public void setId(int id)
-   {
-       this.id = id;
-   }
- 
-   @PrimaryKey(increment = INCREMENT.MANUAL)
-   public int getId()
-   {
-       return id;
-   }
+    public String getId()
+    {
+        return id;
+    }
 
-   public void setCodigo_fiscal(int codigo_fiscal)
-   {
-       this.codigo_fiscal = codigo_fiscal;
-   }
- 
-   public int getCodigo_fiscal()
-   {
-       return codigo_fiscal;
-   }
+    public void setId(String id)
+    {
+        this.id = id;
+    }
 
-   public void setDescricao(String descricao)
-   {
-       this.descricao = descricao;
-   }
- 
-   public String getDescricao()
-   {
-       return descricao;
-   }
+    public String getDescricao()
+    {
+        return descricao;
+    }
+
+    public void setDescricao(String descricao)
+    {
+        this.descricao = descricao;
+    }
+
+    public String getAplicacao()
+    {
+        return aplicacao;
+    }
+
+    public void setAplicacao(String aplicacao)
+    {
+        this.aplicacao = aplicacao;
+    }
+    
 }
