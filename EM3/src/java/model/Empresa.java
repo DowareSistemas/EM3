@@ -50,6 +50,18 @@ public class Empresa extends Entity
     @NotNull(message = "Informe se a empresa está ou não ativa")
     private boolean ativo;
     private int tipo;
+    private int tipo_ie;
+    private String inscr_estadual;
+    private String inscr_municipal;
+    private boolean optante_simples;
+    private String nfe_cert_serie;
+    private int nfe_serie;
+    private int nfe_modelo;
+    private int nfe_ambiente;
+    private int nfce_serie;
+    private int nfce_modelo;
+    private int nfce_ambiente;
+    private String nfce_token;
     private int endereco_id;
 
     @NotNull(message = "A empresa deve possuir um endereço")
@@ -176,6 +188,126 @@ public class Empresa extends Entity
     public int getTipo()
     {
         return tipo;
+    }
+
+    public int getTipo_ie()
+    {
+        return tipo_ie;
+    }
+
+    public void setTipo_ie(int tipo_ie)
+    {
+        this.tipo_ie = tipo_ie;
+    }
+
+    public String getInscr_estadual()
+    {
+        return inscr_estadual;
+    }
+
+    public void setInscr_estadual(String inscr_estadual)
+    {
+        this.inscr_estadual = inscr_estadual;
+    }
+
+    public String getInscr_municipal()
+    {
+        return inscr_municipal;
+    }
+
+    public void setInscr_municipal(String inscr_municipal)
+    {
+        this.inscr_municipal = inscr_municipal;
+    }
+
+    public boolean isOptante_simples()
+    {
+        return optante_simples;
+    }
+
+    public void setOptante_simples(boolean optante_simples)
+    {
+        this.optante_simples = optante_simples;
+    }
+
+    public String getNfe_cert_serie()
+    {
+        return nfe_cert_serie;
+    }
+
+    public void setNfe_cert_serie(String nfe_cert_serie)
+    {
+        this.nfe_cert_serie = nfe_cert_serie;
+    }
+
+    public int getNfe_serie()
+    {
+        return nfe_serie;
+    }
+
+    public void setNfe_serie(int nfe_serie)
+    {
+        this.nfe_serie = nfe_serie;
+    }
+
+    public int getNfe_modelo()
+    {
+        return nfe_modelo;
+    }
+
+    public void setNfe_modelo(int nfe_modelo)
+    {
+        this.nfe_modelo = nfe_modelo;
+    }
+
+    public int getNfe_ambiente()
+    {
+        return nfe_ambiente;
+    }
+
+    public void setNfe_ambiente(int nfe_ambiente)
+    {
+        this.nfe_ambiente = nfe_ambiente;
+    }
+
+    public int getNfce_serie()
+    {
+        return nfce_serie;
+    }
+
+    public void setNfce_serie(int nfce_serie)
+    {
+        this.nfce_serie = nfce_serie;
+    }
+
+    public int getNfce_modelo()
+    {
+        return nfce_modelo;
+    }
+
+    public void setNfce_modelo(int nfce_modelo)
+    {
+        this.nfce_modelo = nfce_modelo;
+    }
+
+    public int getNfce_ambiente()
+    {
+        return nfce_ambiente;
+    }
+
+    public void setNfce_ambiente(int nfce_ambiente)
+    {
+        this.nfce_ambiente = nfce_ambiente;
+    }
+
+    public String getNfce_token()
+    {
+        return nfce_token;
+    }
+
+    public void setNfce_token(String nfce_token)
+    {
+        this.nfce_token = nfce_token;
     }
 
     public void setEnderecos(Enderecos enderecos)

@@ -19,6 +19,7 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import org.hibernate.validator.constraints.NotEmpty;
 
 /**
  *
@@ -29,6 +30,8 @@ public class Tipos_movimento extends Entity
 
     private int id;
     @Size(max = 100, message = "A descrição não pode conter mais de 100 caracteres.")
+    @NotNull(message = "A descrição é obrigatória")
+    @NotEmpty(message = "A descrição é obrigatória")
     private String descricao;
 
     @Min(value = 0, message = "Tipo de movimentação inválido")
