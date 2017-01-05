@@ -7,6 +7,7 @@ package controllers;
 
 import br.com.persistor.generalClasses.FileExtractor;
 import br.com.persistor.interfaces.Session;
+import dao.FotosDao;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import model.Fotos;
@@ -29,11 +30,11 @@ public class ImagensController
 
     public void delete(int id)
     {
-        Session session = SessionProvider.openSession();
-        Fotos f = session.onID(Fotos.class, id);
-        session.delete(f);
-        session.commit();
-        session.close();
+        FotosDao fd = new FotosDao();
+
+        Fotos f = fd.find(id);
+        fd.delete(f);
+        fd.commit();
     }
 
     @RequestMapping(value = "img-save", produces = "application/json; charset=utf-8")
@@ -52,15 +53,8 @@ public class ImagensController
             foto.setId(id);
             foto.setFoto(items.get(0).getInputStream());
 
-            Session session = SessionProvider.openSession();
-
-            if (Utility.exists(Fotos.class, "id", id))
-                session.update(foto);
-            else
-                session.save(foto);
-
-            session.commit();
-            session.close();
+            FotosDao fd = new FotosDao(true);
+            fd.save(foto);
 
             return (foto.saved || foto.updated
                     ? new OperationResult(StatusRetorno.OPERACAO_OK, "Imagem salva.", foto.getId()).toJson()
@@ -81,8 +75,8 @@ public class ImagensController
         SessionProvider.setConfig(request);
         String path = (Utility.getPath("img", request) + nome + id + ".jpg");
 
-        Session session = SessionProvider.openSession();
-        Fotos foto = session.onID(Fotos.class, id);
+        FotosDao fd = new FotosDao(true);
+        Fotos foto = fd.find(id);
 
         if (foto.getId() == 0)
             return new OperationResult(StatusRetorno.NAO_ENCONTRADO, "", "").toJson();
@@ -95,7 +89,6 @@ public class ImagensController
         extractor.setFileToExtract(path);
         extractor.setInputStream(foto.getFoto());
         extractor.extract();
-        session.close();
 
         return new OperationResult(StatusRetorno.OPERACAO_OK, "Imagem exraída com exito.", "img/" + nome + id + ".jpg").toJson();
     }

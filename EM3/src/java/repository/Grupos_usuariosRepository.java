@@ -22,7 +22,7 @@ import sessionProvider.SessionProvider;
  *
  * @author Marcos Vinícius
  */
-public class Grupos_usuariosRepository
+public class Grupos_usuariosRepository extends RepositoryImpl<Grupos_usuarios>
 {
     
     private String message = "";

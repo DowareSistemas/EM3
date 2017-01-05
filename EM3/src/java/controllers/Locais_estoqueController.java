@@ -1,6 +1,8 @@
 package controllers;
 
 import br.com.persistor.interfaces.Session;
+import dao.ArmazemDao;
+import dao.Locais_estoqueDao;
 import java.util.List;
 import javax.validation.Valid;
 import model.Armazens;
@@ -27,12 +29,8 @@ public class Locais_estoqueController
     public @ResponseBody
     String search(@RequestParam(value = "query") String searchTerm)
     {
-        List<Locais_estoque> result;
-        if (searchTerm.isEmpty())
-            result = db.listAll();
-        else
-            result = db.search(searchTerm);
-
+        Locais_estoqueDao ld = new Locais_estoqueDao();
+        List<Locais_estoque> result = ld.search(searchTerm);
         return new OperationResult(StatusRetorno.OPERACAO_OK, "", result).toJson();
     }
 
@@ -43,22 +41,19 @@ public class Locais_estoqueController
         if (result.hasErrors())
             return new OperationResult(StatusRetorno.FALHA_VALIDACAO, result.getFieldErrors().get(0).getDefaultMessage(), "").toJson();
 
-        Session session = SessionProvider.openSession();
-     
-        Armazens armz = session.onID(Armazens.class, local.getArmazem_id());
-        if(armz.getId() == 0)
+        Locais_estoqueDao ld = new Locais_estoqueDao(true);
+        ArmazemDao ad = new ArmazemDao(ld.getSession());
+
+        Armazens armz = ad.find(local.getArmazem_id());
+
+        if (armz.getId() == 0)
         {
-            session.close();
+            ld.commit();
             return new OperationResult(StatusRetorno.FALHA_VALIDACAO, "O armazém informado não foi localizado ou não é válido", "").toJson();
         }
-        
-        if (Utility.exists(Locais_estoque.class, "id", local.getId()))
-            session.update(local);
-        else
-            session.save(local);
 
-        session.commit();
-        session.close();
+        ld.save(local);
+        ld.commit();
 
         if (local.saved || local.updated)
             return new OperationResult(StatusRetorno.OPERACAO_OK, "Local de estoque salvo.", "").toJson();
@@ -70,9 +65,8 @@ public class Locais_estoqueController
     public @ResponseBody
     String get(@RequestParam(value = "id") int id)
     {
-        Session session = SessionProvider.openSession();
-        Locais_estoque le = session.onID(Locais_estoque.class, id);
-        session.close();
+        Locais_estoqueDao ld = new Locais_estoqueDao(true);
+        Locais_estoque le = ld.find(id);
 
         if (le.getId() == 0)
             return new OperationResult(StatusRetorno.NAO_ENCONTRADO, "Registro não encontrado.", "").toJson();
@@ -84,23 +78,23 @@ public class Locais_estoqueController
     public @ResponseBody
     String remove(@RequestParam(value = "id") int id)
     {
-        if(!db.podeExcluir(id))
-            return new OperationResult(StatusRetorno.FALHA_VALIDACAO, db.getMessage(), "").toJson();
-        
-        Session session = SessionProvider.openSession();
-        Locais_estoque le = session.onID(Locais_estoque.class, id);
+        Locais_estoqueDao ld = new Locais_estoqueDao();
+
+        if (!ld.podeExcluir(id))
+            return new OperationResult(StatusRetorno.FALHA_VALIDACAO, ld.getMessage(), "").toJson();
+
+        Locais_estoque le = ld.find(id);
 
         if (le.getId() == 0)
         {
-            session.close();
+            ld.commit();
             return new OperationResult(StatusRetorno.NAO_ENCONTRADO, "Registro não encontrado.", "").toJson();
         }
-        
-        session.delete(le);
-        session.commit();
-        session.close();
-        
-        if(le.deleted)
+
+        ld.delete(le);
+        ld.commit();
+
+        if (le.deleted)
             return new OperationResult(StatusRetorno.OPERACAO_OK, "Local de estoque removido.", "").toJson();
         else
             return new OperationResult(StatusRetorno.OPERACAO_OK, "Ocorreu um problema ao remover o local de estoque. Acione o suporte Doware.", "").toJson();

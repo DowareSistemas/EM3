@@ -23,7 +23,7 @@ import sessionProvider.SessionProvider;
  *
  * @author Marcos Vinícius
  */
-public class FornecedoresRepository
+public class FornecedoresRepository extends RepositoryImpl<Fornecedores>
 {
 
     public List<Fornecedores> getAll()

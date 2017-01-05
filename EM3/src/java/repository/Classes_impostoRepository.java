@@ -12,6 +12,7 @@ import br.com.persistor.generalClasses.Restrictions;
 import br.com.persistor.interfaces.ICriteria;
 import br.com.persistor.interfaces.Session;
 import controllers.Utility;
+import interfaces.IRepository;
 import java.util.List;
 import model.Classes_imposto;
 import model.Operacoes_classe_imposto;
@@ -21,7 +22,7 @@ import sessionProvider.SessionProvider;
  *
  * @author Marcos Vinícius
  */
-public class Classes_impostoRepository
+public class Classes_impostoRepository extends RepositoryImpl<Classes_imposto>
 {
 
     private String message = "";

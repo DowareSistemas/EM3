@@ -5,6 +5,7 @@
  */
 package controllers;
 
+import dao.CfopDao;
 import java.util.List;
 import model.Cfop;
 import org.springframework.stereotype.Controller;
@@ -26,9 +27,8 @@ public class CFOPController
     public @ResponseBody
     String search(@RequestParam(value = "query") String searchTerm)
     {
-        List<Cfop> result = (searchTerm.isEmpty()
-                ? db.listAll()
-                : db.search(searchTerm));
+        CfopDao cd = new CfopDao();
+        List<Cfop> result = cd.search(searchTerm);
         
         return (result.isEmpty()
                 ? new OperationResult(StatusRetorno.NAO_ENCONTRADO, "Nenhum registro encontrado.", "").toJson()

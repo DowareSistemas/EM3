@@ -5,15 +5,13 @@
  */
 package controllers;
 
-import br.com.persistor.interfaces.Session;
+import dao.PermissoesDao;
 import java.util.List;
 import model.Permissoes;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import repository.PermissoesRepository;
-import sessionProvider.SessionProvider;
 
 /**
  *
@@ -23,23 +21,12 @@ import sessionProvider.SessionProvider;
 public class PermissoesController
 {
 
-    PermissoesRepository db = new PermissoesRepository();
-
-    public boolean removeAll(Session session, String whereCondition)
-    {
-        Permissoes permissoes = new Permissoes();
-        session.delete(permissoes, whereCondition);
-        return (permissoes.deleted);
-    }
-
     @RequestMapping(value = "perms-add", produces = "application/json; charset=utf-8")
     public @ResponseBody
     String add(Permissoes permissao)
     {
-        Session session = SessionProvider.openSession();
-        session.save(permissao);
-        session.commit();
-        session.close();
+        PermissoesDao pd = new PermissoesDao(true);
+        pd.save(permissao);
 
         if (permissao.saved)
             return new OperationResult(StatusRetorno.OPERACAO_OK, "Permissão incluida.", "").toJson();
@@ -51,13 +38,10 @@ public class PermissoesController
     public @ResponseBody
     String clear(@RequestParam(value = "grupo_id") int grupo_id)
     {
-        Session session = SessionProvider.openSession();
-        if (removeAll(session, "grupo_usuarios_id = " + grupo_id))
-        {
-            session.commit();
-            session.close();
+        PermissoesDao pd = new PermissoesDao(true);
+
+        if (pd.removeAll("grupo_usuarios_id = " + grupo_id))
             return new OperationResult(StatusRetorno.OPERACAO_OK, "OK", "").toJson();
-        }
         else
             return new OperationResult(StatusRetorno.FALHA_INTERNA, "Ocorreu um problema ao limpar as permissões para este grupo. Acione o supprte Doware", "").toJson();
     }
@@ -66,7 +50,8 @@ public class PermissoesController
     public @ResponseBody
     String listAll(@RequestParam(value = "grupo_id") int grupo_id)
     {
-        List<Permissoes> list = db.listByGrupo(grupo_id);
+        PermissoesDao pd = new PermissoesDao();
+        List<Permissoes> list = pd.listByGrupo(grupo_id);
         return new OperationResult(StatusRetorno.OPERACAO_OK, "", list).toJson();
     }
 }

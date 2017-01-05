@@ -21,7 +21,7 @@ import sessionProvider.SessionProvider;
  *
  * @author Marcos Vinícius
  */
-public class Grupos_produtoRepository
+public class Grupos_produtoRepository extends RepositoryImpl<Grupos_produtos>
 {
 
     String message = "";

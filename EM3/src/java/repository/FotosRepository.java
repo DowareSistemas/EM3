@@ -5,15 +5,13 @@
  */
 package repository;
 
-import interfaces.IRepository;
-import model.Documentos;
+import model.Fotos;
 
 /**
  *
  * @author Marcos Vinícius
  */
-public class DocumentosRepository extends RepositoryImpl<Documentos>
+public class FotosRepository extends RepositoryImpl<Fotos>
 {
-
     
 }

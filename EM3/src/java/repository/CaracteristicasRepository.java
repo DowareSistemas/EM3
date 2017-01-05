@@ -12,6 +12,7 @@ import br.com.persistor.generalClasses.Restrictions;
 import br.com.persistor.interfaces.ICriteria;
 import br.com.persistor.interfaces.Session;
 import controllers.Utility;
+import interfaces.IRepository;
 import java.util.List;
 import model.Caracteristicas;
 import model.Produtos;
@@ -22,7 +23,7 @@ import sessionProvider.SessionProvider;
  *
  * @author Marcos Vinícius
  */
-public class CaracteristicasRepository
+public class CaracteristicasRepository extends RepositoryImpl<Caracteristicas>
 {
     private String message = "";
 

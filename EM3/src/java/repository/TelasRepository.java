@@ -15,7 +15,7 @@ import sessionProvider.SessionProvider;
  *
  * @author Marcos Vinícius
  */
-public class TelasRepository 
+public class TelasRepository extends RepositoryImpl<Telas>
 {
     public List<Telas> listAll()
     {

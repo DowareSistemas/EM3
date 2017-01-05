@@ -6,10 +6,13 @@
 package controllers;
 
 import br.com.persistor.interfaces.Session;
+import dao.ArmazemDao;
+import dao.EmpresaDao;
 import java.util.List;
 import javax.validation.Valid;
 import model.Armazens;
 import model.Empresa;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,19 +26,15 @@ import sessionProvider.SessionProvider;
  * @author Marcos Vinícius
  */
 @Controller
+@Scope(value = "request")
 public class ArmazensController
 {
-    ArmazensRepository db = new ArmazensRepository();
-
     @RequestMapping(value = "armz-search", produces = "application/json; charset=utf-8")
     public @ResponseBody
     String search(@RequestParam(value = "query") String searchTerm, @RequestParam(value = "empresa_id") int empresa_id)
     {
-        List<Armazens> result;
-        if (searchTerm.isEmpty())
-            result = db.listAll(empresa_id);
-        else
-            result = db.search(searchTerm, empresa_id);
+        ArmazemDao dao = new ArmazemDao();
+        List<Armazens> result = dao.search(searchTerm, empresa_id);
 
         if (result.isEmpty())
             return new OperationResult(StatusRetorno.NAO_ENCONTRADO, "Nenhum registro encontrado.", "").toJson();
@@ -47,16 +46,15 @@ public class ArmazensController
     public @ResponseBody
     String get(@RequestParam(value = "id") int id)
     {
-        Session session = SessionProvider.openSession();
-        Armazens armazem = session.onID(Armazens.class, id);
-        session.close();
-        
-        if(armazem.getId() == 0)
+        ArmazemDao dao = new ArmazemDao(true);
+        Armazens armazem = dao.find(id);
+
+        if (armazem.getId() == 0)
             return new OperationResult(StatusRetorno.NAO_ENCONTRADO, "Registro não encontrado.", "").toJson();
         else
             return new OperationResult(StatusRetorno.OPERACAO_OK, "", armazem).toJson();
     }
-    
+
     @RequestMapping(value = "armz-save", produces = "application/json; charset=utf-8")
     public @ResponseBody
     String save(@Valid Armazens armazem, BindingResult result)
@@ -64,21 +62,14 @@ public class ArmazensController
         if (result.hasErrors())
             return new OperationResult(StatusRetorno.FALHA_VALIDACAO, result.getFieldErrors().get(0).getDefaultMessage(), "").toJson();
 
-        Session session = SessionProvider.openSession();
+        EmpresaDao ed = new EmpresaDao(true);
+        ArmazemDao ad = new ArmazemDao(true);
 
         if (armazem.getEmpresa_id() > 0)
-            if (((Empresa) session.onID(Empresa.class, armazem.getEmpresa_id())).getId() == 0)
-            {
-                session.close();
+            if ((ed.find(armazem.getEmpresa_id())).getId() == 0)
                 return new OperationResult(StatusRetorno.FALHA_VALIDACAO, "A empresa informada não foi localizada", "").toJson();
-            }
 
-        if (Utility.exists(Armazens.class, "id", armazem.getId()))
-            session.update(armazem);
-        else
-            session.save(armazem);
-        session.commit();
-        session.close();
+        ad.save(armazem);
 
         if (armazem.saved || armazem.updated)
             return new OperationResult(StatusRetorno.OPERACAO_OK, "Armazém salvo.", "").toJson();
@@ -90,26 +81,25 @@ public class ArmazensController
     public @ResponseBody
     String remove(@RequestParam(value = "id") int id)
     {
-        Session session = SessionProvider.openSession();
-        Armazens armz = session.onID(Armazens.class, id);
-        
-        if(armz.getId() == 0)
+        ArmazemDao ad = new ArmazemDao();
+        Armazens armz = ad.find(id);
+
+        if (armz.getId() == 0)
         {
-            session.close();
+            ad.commit();
             return new OperationResult(StatusRetorno.FALHA_VALIDACAO, "Registro não encontrado.", "").toJson();
         }
         
-        if(!db.podeExcluir(id))
+        if (!ad.podeExcluir(id))
         {
-            session.close();
-            return new OperationResult(StatusRetorno.FALHA_VALIDACAO, db.getMessage(), "").toJson();
+            ad.commit();
+            return new OperationResult(StatusRetorno.FALHA_VALIDACAO, ad.getMessage(), "").toJson();
         }
         
-        session.delete(armz);
-        session.commit();
-        session.close();
-        
-        if(armz.deleted)
+        ad.delete(armz);
+        ad.commit();
+
+        if (armz.deleted)
             return new OperationResult(StatusRetorno.OPERACAO_OK, "Armazém removido.", "").toJson();
         else
             return new OperationResult(StatusRetorno.FALHA_INTERNA, "Ocorreu um problema ao excluir o armazém. Acione o suporte Doware.", "").toJson();

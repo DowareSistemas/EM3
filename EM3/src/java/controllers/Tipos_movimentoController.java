@@ -6,6 +6,7 @@
 package controllers;
 
 import br.com.persistor.interfaces.Session;
+import dao.Tipos_movimentoDao;
 import java.util.List;
 import javax.validation.Valid;
 import model.Tipos_movimento;
@@ -36,12 +37,8 @@ public class Tipos_movimentoController
     public @ResponseBody
     String search(@RequestParam(value = "query") String searchTerm, @RequestParam(value = "tipo") int tipo)
     {
-        List<Tipos_movimento> result;
-        
-        if(searchTerm.isEmpty())
-            result = db.listAll(tipo);
-        else
-            result = db.search(searchTerm, tipo);
+        Tipos_movimentoDao td = new Tipos_movimentoDao();
+        List<Tipos_movimento> result = td.search(searchTerm, tipo);
         
         return (result.isEmpty()
                 ? new OperationResult(StatusRetorno.NAO_ENCONTRADO, "Nenhum registro encontrado", "").toJson()
@@ -55,13 +52,8 @@ public class Tipos_movimentoController
         if (result.hasErrors())
             return new OperationResult(StatusRetorno.FALHA_VALIDACAO, result.getFieldErrors().get(0).getDefaultMessage(), "").toJson();
 
-        Session session = SessionProvider.openSession();
-        if (Utility.exists(Tipos_movimento.class, "id", tmv.getId()))
-            session.update(tmv);
-        else
-            session.save(tmv);
-        session.commit();
-        session.close();
+        Tipos_movimentoDao td = new Tipos_movimentoDao(true);
+        td.save(tmv);
         
         return (tmv.saved || tmv.updated
                 ? new OperationResult(StatusRetorno.OPERACAO_OK, "Tipo de movimento salvo.", "").toJson()
@@ -75,18 +67,17 @@ public class Tipos_movimentoController
         if(!db.podeExcluir(id))
             return new OperationResult(StatusRetorno.FALHA_VALIDACAO, db.getMessage(), "").toJson();
         
-        Session session = SessionProvider.openSession();
-        Tipos_movimento tmv = session.onID(Tipos_movimento.class, id);
+        Tipos_movimentoDao td = new Tipos_movimentoDao();
+        Tipos_movimento tmv = td.find(id);
         
         if(tmv.getId() == 0)
         {
-            session.close();
+            td.commit();
             return new OperationResult(StatusRetorno.NAO_ENCONTRADO, "Registro não encontrado", "").toJson();
         }
         
-        session.delete(tmv);
-        session.commit();
-        session.close();
+        td.delete(tmv);
+        td.commit();
         
         return (tmv.saved || tmv.updated
                 ? new OperationResult(StatusRetorno.OPERACAO_OK, "Tipo de movimento excluido", "").toJson()
@@ -97,9 +88,8 @@ public class Tipos_movimentoController
     public @ResponseBody
     String get(@RequestParam(value = "id") int id)
     {
-        Session session = SessionProvider.openSession();
-        Tipos_movimento tmv = session.onID(Tipos_movimento.class, id);
-        session.close();
+        Tipos_movimentoDao td = new Tipos_movimentoDao(true);
+        Tipos_movimento tmv = td.find(id);
         
         return (tmv.getId() > 0
                 ? new OperationResult(StatusRetorno.OPERACAO_OK, "", tmv).toJson()

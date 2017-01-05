@@ -6,8 +6,11 @@
 package controllers;
 
 import br.com.persistor.interfaces.Session;
+import dao.FotosDao;
+import dao.Grupos_produtoDao;
 import java.util.List;
 import javax.validation.Valid;
+import model.Fotos;
 import model.Grupos_produtos;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -37,9 +40,8 @@ public class Grupos_produtosController
     public @ResponseBody
     String search(@RequestParam(value = "query") String searchTerm, @RequestParam(value = "tipo") int tipo)
     {
-        List<Grupos_produtos> result = (searchTerm.isEmpty()
-                ? db.listAll(tipo)
-                : db.search(searchTerm, tipo));
+        Grupos_produtoDao gd = new Grupos_produtoDao();
+        List<Grupos_produtos> result = gd.search(searchTerm, tipo);
 
         return (result.isEmpty()
                 ? new OperationResult(StatusRetorno.NAO_ENCONTRADO, "", "").toJson()
@@ -53,15 +55,8 @@ public class Grupos_produtosController
         if (result.hasErrors())
             return new OperationResult(StatusRetorno.FALHA_VALIDACAO, result.getFieldErrors().get(0).getDefaultMessage(), "").toJson();
 
-        Session session = SessionProvider.openSession();
-
-        if (Utility.exists(Grupos_produtos.class, "id", grupos_produtos.getId()))
-            session.update(grupos_produtos);
-        else
-            session.save(grupos_produtos);
-
-        session.commit();
-        session.close();
+        Grupos_produtoDao gd = new Grupos_produtoDao(true);
+        gd.save(grupos_produtos);
 
         return ((grupos_produtos.saved || grupos_produtos.updated)
                 ? new OperationResult(StatusRetorno.OPERACAO_OK, "Grupo salvo.", grupos_produtos).toJson()
@@ -72,9 +67,8 @@ public class Grupos_produtosController
     public @ResponseBody
     String get(@RequestParam(value = "id") int id)
     {
-        Session session = SessionProvider.openSession();
-        Grupos_produtos gp = session.onID(Grupos_produtos.class, id);
-        session.close();
+        Grupos_produtoDao gd = new Grupos_produtoDao(true);
+        Grupos_produtos gp = gd.find(id);
 
         return (gp.getId() > 0)
                 ? new OperationResult(StatusRetorno.OPERACAO_OK, "", gp).toJson()
@@ -88,20 +82,25 @@ public class Grupos_produtosController
         if (!db.podeExcluir(id))
             return new OperationResult(StatusRetorno.FALHA_VALIDACAO, db.getMessage(), "").toJson();
 
-        Session session = SessionProvider.openSession();
-        Grupos_produtos gp = session.onID(Grupos_produtos.class, id);
+        Grupos_produtoDao gd = new Grupos_produtoDao();
+        Grupos_produtos gp = gd.find(id);
 
         if (gp.getId() == 0)
         {
-            session.close();
+            gd.commit();
             return new OperationResult(StatusRetorno.NAO_ENCONTRADO, "Registro não encontrado.", "").toJson();
         }
 
-        session.delete(gp);
-        session.commit();
-        session.close();
+        gd.delete(gp);
 
-        new ImagensController().delete(gp.getFoto_id());
+        if (gp.getFoto_id() > 0)
+        {
+            FotosDao fd = new FotosDao(gd.getSession());
+            Fotos foto = fd.find(gp.getFoto_id());
+            fd.delete(foto);
+        }
+
+        gd.commit();
 
         return (gp.deleted
                 ? new OperationResult(StatusRetorno.OPERACAO_OK, "Grupo excluido.", "").toJson()

@@ -6,6 +6,7 @@
 package controllers;
 
 import br.com.persistor.interfaces.Session;
+import dao.Classe_impostoDao;
 import java.util.List;
 import javax.validation.Valid;
 import model.Classes_imposto;
@@ -25,8 +26,6 @@ import sessionProvider.SessionProvider;
 public class Classe_impostoController
 {
 
-    Classes_impostoRepository db = new Classes_impostoRepository();
-
     @RequestMapping(value = "climp-save", produces = "application/json; charset=utf-8")
     public @ResponseBody
     String save(@Valid Classes_imposto classe, BindingResult result)
@@ -34,15 +33,8 @@ public class Classe_impostoController
         if (result.hasErrors())
             return new OperationResult(StatusRetorno.FALHA_VALIDACAO, result.getFieldErrors().get(0).getDefaultMessage(), "").toJson();
 
-        Session session = SessionProvider.openSession();
-
-        if (Utility.exists(Classes_imposto.class, "id", classe.getId()))
-            session.update(classe);
-        else
-            session.save(classe);
-
-        session.commit();
-        session.close();
+        Classe_impostoDao cd = new Classe_impostoDao(true);
+        cd.save(classe);
 
         return (classe.saved || classe.updated
                 ? new OperationResult(StatusRetorno.OPERACAO_OK, "Classe de imposto salva.", "").toJson()
@@ -53,11 +45,8 @@ public class Classe_impostoController
     public @ResponseBody
     String search(@RequestParam(value = "query") String searchTerm)
     {
-        List<Classes_imposto> result;
-
-        result = (searchTerm.isEmpty()
-                ? db.listAll()
-                : db.search(searchTerm));
+        Classe_impostoDao cd = new Classe_impostoDao();
+        List<Classes_imposto> result = cd.search(searchTerm);
         
         return (result.isEmpty()
                 ? new OperationResult(StatusRetorno.NAO_ENCONTRADO, "Nenhum registro encontrado.", "").toJson()
@@ -68,9 +57,8 @@ public class Classe_impostoController
     public @ResponseBody
     String get(@RequestParam(value = "id") int id)
     {
-        Session session = SessionProvider.openSession();
-        Classes_imposto classe = session.onID(Classes_imposto.class, id);
-        session.close();
+        Classe_impostoDao cd = new Classe_impostoDao(true);
+        Classes_imposto classe = cd.find(id);
         
         return (classe.getId() > 0
                 ? new OperationResult(StatusRetorno.OPERACAO_OK, "", classe).toJson()
@@ -81,21 +69,21 @@ public class Classe_impostoController
     public @ResponseBody
     String remove(@RequestParam(value = "id") int id)
     {
-        if(!db.podeExcluir(id))
-            return new OperationResult(StatusRetorno.FALHA_VALIDACAO, db.getMessage(), "").toJson();
+        Classe_impostoDao cd = new Classe_impostoDao();
         
-        Session session = SessionProvider.openSession();
-        Classes_imposto classe = session.onID(Classes_imposto.class, id);
+        if(!cd.podeExcluir(id))
+            return new OperationResult(StatusRetorno.FALHA_VALIDACAO, cd.getMessage(), "").toJson();
+        
+        Classes_imposto classe = cd.find(id);
         
         if(classe.getId() == 0)
         {
-            session.close();
+            cd.commit();
             return new OperationResult(StatusRetorno.NAO_ENCONTRADO, "Registro não encontrado.", "").toJson();
         }
         
-        session.delete(classe);
-        session.commit();
-        session.close();
+        cd.delete(classe);
+        cd.commit();
         
         return (classe.deleted
                 ? new OperationResult(StatusRetorno.OPERACAO_OK, "Classe de imposto excluida.", "").toJson()

@@ -5,11 +5,13 @@
  */
 package repository;
 
+import model.Enderecos;
+
 /**
  *
  * @author Marcos Vinícius
  */
-public class EnderecosRepository 
+public class EnderecosRepository extends RepositoryImpl<Enderecos>
 {
     
 }

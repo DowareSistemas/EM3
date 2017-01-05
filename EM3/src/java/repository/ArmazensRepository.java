@@ -13,6 +13,7 @@ import br.com.persistor.generalClasses.Restrictions;
 import br.com.persistor.interfaces.ICriteria;
 import br.com.persistor.interfaces.Session;
 import controllers.Utility;
+import interfaces.IRepository;
 import java.util.List;
 import model.Armazens;
 import model.Empresa;
@@ -23,7 +24,7 @@ import sessionProvider.SessionProvider;
  *
  * @author Marcos Vinícius
  */
-public class ArmazensRepository
+public class ArmazensRepository extends RepositoryImpl<Armazens>
 {
 
     private String message = "";

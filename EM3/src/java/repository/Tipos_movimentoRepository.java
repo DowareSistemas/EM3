@@ -22,7 +22,7 @@ import sessionProvider.SessionProvider;
  *
  * @author Marcos Vinícius
  */
-public class Tipos_movimentoRepository
+public class Tipos_movimentoRepository extends RepositoryImpl<Tipos_movimento>
 {
 
     private String message = "";

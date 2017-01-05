@@ -21,7 +21,7 @@ import sessionProvider.SessionProvider;
  *
  * @author Marcos Vinícius
  */
-public class UnidadesRepository 
+public class UnidadesRepository extends RepositoryImpl<Unidades>
 {
 
     public List<Unidades> getAll()

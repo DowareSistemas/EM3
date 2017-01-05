@@ -6,6 +6,9 @@
 package controllers;
 
 import br.com.persistor.interfaces.Session;
+import dao.DocumentosDao;
+import dao.EnderecosDao;
+import dao.FornecedorDao;
 import java.util.List;
 import javax.validation.Valid;
 import model.Fornecedores;
@@ -31,12 +34,8 @@ public class FornecedoresController
     public @ResponseBody
     String search(@RequestParam(value = "query") String query)
     {
-        List<Fornecedores> fornecedores;
-
-        if (query.isEmpty())
-            fornecedores = db.getAll();
-        else
-            fornecedores = db.search(query);
+        FornecedorDao fd = new FornecedorDao();
+        List<Fornecedores> fornecedores = fd.search(query);
 
         if (fornecedores.isEmpty())
             return new OperationResult(StatusRetorno.NAO_ENCONTRADO, "Nenhum registro encontrado", "").toJson();
@@ -48,21 +47,23 @@ public class FornecedoresController
     public @ResponseBody
     String delete(@RequestParam(value = "id") int id)
     {
-        Session session = SessionProvider.openSession();
-        
-        Fornecedores forn = session.onID(Fornecedores.class, id);
+        FornecedorDao fd = new FornecedorDao();
+        DocumentosDao dd = new DocumentosDao(fd.getSession());
+        EnderecosDao ed = new EnderecosDao(fd.getSession());
+
+        Fornecedores forn = fd.find(id);
+
         if (forn.getId() == 0)
         {
-            session.close();
+            fd.commit();
             return new OperationResult(StatusRetorno.NAO_ENCONTRADO, "Fornecedor não localizado.", "").toJson();
         }
-        
-        new DocumentosController().delete(forn.getDocumentos(), session);
-        new EnderecosController().delete(forn.getEnderecos(), session);
-       
-        session.delete(forn);
-        session.commit();
-        session.close();
+
+        dd.delete(forn.getDocumentos());
+        ed.delete(forn.getEnderecos());
+        fd.delete(forn);
+
+        fd.commit();
 
         if (forn.deleted)
             return new OperationResult(StatusRetorno.OPERACAO_OK, "Fornecedor excluído.", "").toJson();
@@ -77,15 +78,8 @@ public class FornecedoresController
         if (result.hasErrors())
             return new OperationResult(StatusRetorno.FALHA_VALIDACAO, result.getFieldErrors().get(0).getDefaultMessage(), "").toJson();
 
-        Session session = SessionProvider.openSession();
-        
-        if (Utility.exists(Fornecedores.class, "id", fornecedor.getId()))
-           session.update(fornecedor);
-        else
-            session.save(fornecedor);
-
-        session.commit();
-        session.close();
+        FornecedorDao fd = new FornecedorDao(true);
+        fd.save(fornecedor);
 
         if (fornecedor.saved || fornecedor.updated)
             return new OperationResult(StatusRetorno.OPERACAO_OK, "Fornecedor salvo.", "").toJson();

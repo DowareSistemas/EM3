@@ -17,7 +17,7 @@ import sessionProvider.SessionProvider;
  *
  * @author Marcos Vinícius
  */
-public class PermissoesRepository 
+public class PermissoesRepository extends RepositoryImpl<Permissoes>
 {
 
     public List<Permissoes> listByGrupo(int grupo_id)

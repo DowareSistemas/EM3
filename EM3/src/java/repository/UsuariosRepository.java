@@ -28,11 +28,11 @@ import sessionProvider.SessionProvider;
  *
  * @author Marcos Vinícius
  */
-public class UsuariosRepository 
+public class UsuariosRepository extends RepositoryImpl<Usuarios>
 {
 
     private String message = "";
-    
+
     public Usuarios efetuaLogin(Usuarios usuario)
     {
         Session session = SessionProvider.openSession();
@@ -105,24 +105,27 @@ public class UsuariosRepository
 
         if (Utility.tryParse(searchTerm) > 0)
             c.add(Restrictions.eq(FILTER_TYPE.OR, "usuarios.id", Utility.tryParse(searchTerm)));
-        
-        switch(tipo)
+
+        switch (tipo)
         {
             case 0:
-                
-                c.add(Restrictions.in(FILTER_TYPE.AND, "ativo", new String[]{"0", "1"}));
+
+                c.add(Restrictions.in(FILTER_TYPE.AND, "ativo", new String[]
+                {
+                    "0", "1"
+                }));
                 break;
             case 1:
-                
+
                 c.add(Restrictions.eq(FILTER_TYPE.AND, "ativo", 1));
                 break;
-                
+
             case 2:
-                
+
                 c.add(Restrictions.eq(FILTER_TYPE.AND, "ativo", 0));
                 break;
         }
-        
+
         c.execute();
         c.loadList(usuarios);
         c.loadList(grupos_usuarios);
@@ -138,7 +141,7 @@ public class UsuariosRepository
 
         return listUsuarios;
     }
-    
+
     public List<Usuarios> getAll()
     {
         Usuarios usuarios = new Usuarios();
@@ -166,24 +169,49 @@ public class UsuariosRepository
     public boolean podeExcluir(int id)
     {
         Session session = SessionProvider.openSession();
-        
-        if(session.count(Movimentos.class, "usuario_id = " + id) > 0)
+
+        if (session.count(Movimentos.class, "usuario_id = " + id) > 0)
             message = "Não é possível excluir este usuário. Ele está relacionado a um ou mais movimentos.";
-       
-        if(session.count(Movimentacoes_caixas.class, "usuario_abertura = " + id) > 0
+
+        if (session.count(Movimentacoes_caixas.class, "usuario_abertura = " + id) > 0
                 || session.count(Movimentacoes_caixas.class, "usuario_fechamento = " + 0) > 0)
             message = "Não é possível excluir este usuário. Ele está relacionado a uma ou mais movimentações de caixa.";
-        
-        if(session.count(Funcionarios.class, "usuario_id = " + id) > 0)
+
+        if (session.count(Funcionarios.class, "usuario_id = " + id) > 0)
             message = "Não é possível excluir este usuário. Ele está relacionado a um funcionário.";
-        
+
         session.close();
-        
+
         return message.isEmpty();
     }
 
     public String getMessage()
     {
         return this.message;
+    }
+
+    public int count(int tipo)
+    {
+        Session session = SessionProvider.openSession();
+        int count = 0;
+        switch (tipo)
+        {
+            case 0:
+
+                count = session.count(Usuarios.class, "ativo in (0, 1)");
+                break;
+            case 1:
+
+                count = session.count(Usuarios.class, "ativo = 1");
+                break;
+
+            case 2:
+
+                count = session.count(Usuarios.class, "ativo = 0");
+                break;
+        }
+
+        session.close();
+        return count;
     }
 }

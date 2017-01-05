@@ -6,6 +6,8 @@
 package controllers;
 
 import br.com.persistor.interfaces.Session;
+import dao.Grupos_usuariosDao;
+import dao.PermissoesDao;
 import java.util.List;
 import javax.validation.Valid;
 import model.Grupos_usuarios;
@@ -26,23 +28,18 @@ import sessionProvider.SessionProvider;
 public class Grupos_usuariosController
 {
 
-    Grupos_usuariosRepository db = new Grupos_usuariosRepository();
-
     public Grupos_usuarios findByUsuario(int usuario_id)
     {
-        return db.findByUsuario(usuario_id);
+        Grupos_usuariosDao gd = new Grupos_usuariosDao(true);
+        return gd.findByUsuario(usuario_id);
     }
 
     @RequestMapping(value = "/gusr-search", produces = "application/json; charset=utf-8")
     public @ResponseBody
     String search(@RequestParam(value = "query") String searchTerm)
     {
-        List<Grupos_usuarios> result;
-
-        if (searchTerm.isEmpty())
-            result = db.listAll();
-        else
-            result = db.search(searchTerm);
+        Grupos_usuariosDao gd = new Grupos_usuariosDao();
+        List<Grupos_usuarios> result = gd.search(searchTerm);
 
         if (result.isEmpty())
             return new OperationResult(StatusRetorno.NAO_ENCONTRADO, "Nenhum registro encontrado.", "").toJson();
@@ -54,9 +51,8 @@ public class Grupos_usuariosController
     public @ResponseBody
     String get(@RequestParam(value = "id") int id)
     {
-        Session session = SessionProvider.openSession();
-        Grupos_usuarios gu = session.onID(Grupos_usuarios.class, id);
-        session.close();
+        Grupos_usuariosDao gd = new Grupos_usuariosDao(true);
+        Grupos_usuarios gu = gd.find(id);
 
         if (gu.getId() == 0)
             return new OperationResult(StatusRetorno.NAO_ENCONTRADO, "Grupo não encontrado.", "").toJson();
@@ -71,15 +67,8 @@ public class Grupos_usuariosController
         if (result.hasErrors())
             return new OperationResult(StatusRetorno.FALHA_VALIDACAO, result.getFieldErrors().get(0).getDefaultMessage(), "").toJson();
 
-        Session session  = SessionProvider.openSession();
-        
-        if (Utility.exists(Grupos_usuarios.class, "id", grupo.getId()))
-            session.update(grupo);
-        else
-            session.save(grupo);
-
-        session.commit();
-        session.close();
+        Grupos_usuariosDao gd = new Grupos_usuariosDao(true);
+        gd.save(grupo);
 
         if (grupo.saved || grupo.updated)
             return new OperationResult(StatusRetorno.OPERACAO_OK, "Grupo salvo com sucesso.", "").toJson();
@@ -91,21 +80,20 @@ public class Grupos_usuariosController
     public @ResponseBody
     String delete(@RequestParam(value = "id") int id)
     {
-        Session session = SessionProvider.openSession();
-        Grupos_usuarios grupo = session.onID(Grupos_usuarios.class, id);
+        Grupos_usuariosDao gd = new Grupos_usuariosDao();
+        PermissoesDao pd = new PermissoesDao(gd.getSession());
+
+        Grupos_usuarios grupo = gd.find(id);
 
         if (grupo.getId() == 0)
             return new OperationResult(StatusRetorno.NAO_ENCONTRADO, "Grupo de usuários não localizado.", "").toJson();
 
-        if (!db.podeExcluir(grupo.getId()))
-            return new OperationResult(StatusRetorno.FALHA_VALIDACAO, db.getMessage(), "").toJson();
+        if (!gd.podeExcluir(grupo.getId()))
+            return new OperationResult(StatusRetorno.FALHA_VALIDACAO, gd.getMessage(), "").toJson();
 
-        if (new PermissoesController().removeAll(session, "grupo_usuarios_id = " + id))
-        {
-            session.delete(grupo);
-            session.commit();
-            session.close();
-        }
+        pd.removeAll("grupo_usuarios_id = " + id);
+        gd.delete(grupo);
+        gd.commit();
 
         if (grupo.deleted)
             return new OperationResult(StatusRetorno.OPERACAO_OK, "Grupo de usuários excluído", "").toJson();

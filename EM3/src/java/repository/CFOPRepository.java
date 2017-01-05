@@ -13,6 +13,7 @@ import br.com.persistor.generalClasses.Restrictions;
 import br.com.persistor.interfaces.ICriteria;
 import br.com.persistor.interfaces.Session;
 import controllers.Utility;
+import interfaces.IRepository;
 import java.util.List;
 import model.Cfop;
 import sessionProvider.SessionProvider;
@@ -21,7 +22,7 @@ import sessionProvider.SessionProvider;
  *
  * @author Marcos Vinícius
  */
-public class CFOPRepository
+public class CFOPRepository extends RepositoryImpl<Cfop>
 {
 
     public List<Cfop> listAll()

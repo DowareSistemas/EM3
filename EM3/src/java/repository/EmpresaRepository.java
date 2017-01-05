@@ -22,7 +22,7 @@ import sessionProvider.SessionProvider;
  *
  * @author Marcos Vinícius
  */
-public class EmpresaRepository
+public class EmpresaRepository extends RepositoryImpl<Empresa>
 {
     public List<Empresa> getAll()
     {

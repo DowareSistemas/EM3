@@ -7,11 +7,13 @@ package controllers;
 
 import br.com.persistor.interfaces.Session;
 import com.google.gson.Gson;
+import dao.EmpresaDao;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import model.Empresa;
 import model.Enderecos;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -26,10 +28,9 @@ import sessionProvider.SessionProvider;
  * @author Marcos Vinícius
  */
 @Controller
+@Scope("request")
 public class EmpresasController
 {
-
-    EmpresaRepository db = new EmpresaRepository();
 
     @RequestMapping(value = "/emp-save", produces = "application/json; charset=utf-8")
     public @ResponseBody
@@ -38,15 +39,8 @@ public class EmpresasController
         if (result.hasErrors())
             return new OperationResult(StatusRetorno.FALHA_VALIDACAO, result.getFieldErrors().get(0).getDefaultMessage(), "").toJson();
 
-        Session session = SessionProvider.openSession();
-
-        if (Utility.exists(Empresa.class, "id", emp.getId()))
-            session.update(emp);
-        else
-            session.save(emp);
-
-        session.commit();
-        session.close();
+        EmpresaDao ed = new EmpresaDao(true);
+        ed.save(emp);
 
         if (emp.saved || emp.updated)
             return new OperationResult(StatusRetorno.OPERACAO_OK, "Empresa salva", "").toJson();
@@ -63,12 +57,8 @@ public class EmpresasController
         if (!SessionProvider.databaseHasConfigured())
             return new OperationResult(StatusRetorno.OPERACAO_OK, "no_tables", "0").toJson();
 
-        List<Empresa> empresas;
-
-        if (searchTerm.isEmpty())
-            empresas = db.getAll();
-        else
-            empresas = db.search(searchTerm);
+        EmpresaDao ed = new EmpresaDao();
+        List<Empresa> empresas = ed.search(searchTerm);
 
         if (empresas.isEmpty())
             return new OperationResult(StatusRetorno.NAO_ENCONTRADO, "Nenhum registro encontrado", "").toJson();
@@ -84,10 +74,9 @@ public class EmpresasController
 
         if (!SessionProvider.databaseHasConfigured())
             return new OperationResult(StatusRetorno.OPERACAO_OK, "no_tables", "0").toJson();
-
-        Session session = SessionProvider.openSession();
-        Empresa e = session.onID(Empresa.class, id);
-        session.close();
+       
+        EmpresaDao ed = new EmpresaDao(true);
+        Empresa e = ed.find(id);
 
         if (e.getId() == 0)
             return new OperationResult(StatusRetorno.NAO_ENCONTRADO, "Empresa não localizada", "").toJson();

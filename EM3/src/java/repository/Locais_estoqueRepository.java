@@ -23,7 +23,7 @@ import sessionProvider.SessionProvider;
  *
  * @author Marcos Vinícius
  */
-public class Locais_estoqueRepository
+public class Locais_estoqueRepository extends RepositoryImpl<Locais_estoque>
 {
 
     String message = "";
