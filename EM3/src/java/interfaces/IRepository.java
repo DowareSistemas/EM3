@@ -33,5 +33,7 @@ public interface IRepository<T>
     
     void setAutoCommitOrClose(boolean autoCommitOrClose);
     
+    int count(Class entityClass, String whereParams);
+    
     void close();
 }

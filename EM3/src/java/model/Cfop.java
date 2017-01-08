@@ -28,6 +28,7 @@ public class Cfop extends Entity
     private String descricao;
     private String aplicacao;
 
+    @PrimaryKey(increment = INCREMENT.AUTO)
     public String getId()
     {
         return id;

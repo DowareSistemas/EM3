@@ -155,6 +155,18 @@ public abstract class RepositoryImpl<T> implements IRepository<T>
     }
 
     @Override
+    public int count(Class entityClasse, String whereParams)
+    {
+        checkInitialization();
+        int count = session.count(entityClasse, whereParams);
+        
+        if(autoCommitOrClose)
+            close();
+        
+        return count;
+    }
+    
+    @Override
     public void close()
     {
         this.session.close();
