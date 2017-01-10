@@ -10,6 +10,7 @@ import dao.Classe_impostoDao;
 import java.util.List;
 import javax.validation.Valid;
 import model.Classes_imposto;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,6 +24,7 @@ import sessionProvider.SessionProvider;
  * @author Marcos Vinícius
  */
 @Controller
+@Scope(value = "request")
 public class Classe_impostoController
 {
 

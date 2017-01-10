@@ -7,6 +7,7 @@ package controllers;
 
 import br.com.persistor.interfaces.Session;
 import model.Clientes;
+import org.springframework.context.annotation.Scope;
 import repository.ClientesRepository;
 import sessionProvider.SessionProvider;
 
@@ -14,6 +15,7 @@ import sessionProvider.SessionProvider;
  *
  * @author Marcos Vinícius
  */
+@Scope(value = "request")
 public class ClientesController
 {
 

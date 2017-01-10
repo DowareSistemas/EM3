@@ -25,8 +25,8 @@ import java.io.InputStream;
 public class Bancos extends Entity 
 {
    private int id; 
-   private int nome; 
-   private int numero; 
+   private String nome; 
+   private String numero; 
 
    public void setId(int id)
    {
@@ -39,22 +39,22 @@ public class Bancos extends Entity
        return id;
    }
 
-   public void setNome(int nome)
+   public void setNome(String nome)
    {
        this.nome = nome;
    }
  
-   public int getNome()
+   public String getNome()
    {
        return nome;
    }
 
-   public void setNumero(int numero)
+   public void setNumero(String numero)
    {
        this.numero = numero;
    }
  
-   public int getNumero()
+   public String getNumero()
    {
        return numero;
    }

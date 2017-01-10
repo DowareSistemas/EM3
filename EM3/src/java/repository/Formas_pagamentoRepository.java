@@ -204,6 +204,33 @@ public class Formas_pagamentoRepository extends RepositoryImpl<Formas_pagamento>
                 message = "Código da conta bancária não permitido para o tipo pagamento Cartão";
                 return false;
             }
+            
+            if(fpg.getOperadora_cartao_id() == 0)
+            {
+                message = "Informe a operadora de cartão";
+                return false;
+            }
+        }
+        
+        if(fpg.getTipo_pagamento() == Tipos_pagamento.BOLETO)
+        {
+            if(fpg.getConta_bancaria_id() == 0)
+            {
+                message = "Informe a conta bancária";
+                return false;
+            }
+            
+            if(fpg.getParcelas() == 0)
+            {
+                message = "Informe o número de parcelas";
+                return false;
+            }
+            
+            if(fpg.getIntervalo() == 0 && fpg.getDia_base() == 0)
+            {
+                message = "Dia base / Intervalo devem ser informados";
+                return false;
+            }
         }
         
         return true;
