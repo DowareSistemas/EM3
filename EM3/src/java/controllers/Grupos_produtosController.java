@@ -12,6 +12,7 @@ import java.util.List;
 import javax.validation.Valid;
 import model.Fotos;
 import model.Grupos_produtos;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -25,6 +26,7 @@ import sessionProvider.SessionProvider;
  * @author Marcos Vinícius
  */
 @Controller
+@Scope(value = "request")
 public class Grupos_produtosController
 {
 

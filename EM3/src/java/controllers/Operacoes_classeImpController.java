@@ -9,6 +9,7 @@ import dao.Operacoes_ClasseImpostoDao;
 import java.util.List;
 import javax.validation.Valid;
 import model.Operacoes_classe_imposto;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
  * @author Marcos Vinícius
  */
 @Controller
+@Scope(value = "request")
 public class Operacoes_classeImpController
 {
 

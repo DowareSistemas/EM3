@@ -14,6 +14,7 @@ import model.Fotos;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -25,6 +26,7 @@ import sessionProvider.SessionProvider;
  * @author Marcos Vinícius
  */
 @Controller
+@Scope(value = "request")
 public class ImagensController
 {
 

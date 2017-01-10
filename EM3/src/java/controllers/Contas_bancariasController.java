@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
  * @author Marcos Vinícius
  */
 @Controller
+@Scope(value = "request")
 public class Contas_bancariasController
 {
 
