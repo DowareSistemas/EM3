@@ -43,7 +43,7 @@ public class Locais_estoqueController
         if (result.hasErrors())
             return new OperationResult(StatusRetorno.FALHA_VALIDACAO, result.getFieldErrors().get(0).getDefaultMessage(), "").toJson();
 
-        Locais_estoqueDao ld = new Locais_estoqueDao(true);
+        Locais_estoqueDao ld = new Locais_estoqueDao();
         ArmazemDao ad = new ArmazemDao(ld.getSession());
 
         Armazens armz = ad.find(local.getArmazem_id());

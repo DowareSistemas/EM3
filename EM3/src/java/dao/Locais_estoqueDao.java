@@ -40,7 +40,7 @@ public class Locais_estoqueDao
 
     public void save(Locais_estoque local)
     {
-        if (db.exists(Locais_estoque.class, "id", local))
+        if (db.exists(Locais_estoque.class, "id", local.getId()))
             db.update(local);
         else
             db.save(local);

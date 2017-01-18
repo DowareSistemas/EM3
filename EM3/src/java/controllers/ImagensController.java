@@ -6,8 +6,10 @@
 package controllers;
 
 import br.com.persistor.generalClasses.FileExtractor;
-import br.com.persistor.interfaces.Session;
 import dao.FotosDao;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import model.Fotos;
@@ -75,7 +77,13 @@ public class ImagensController
     String get(@RequestParam(value = "id") int id, @RequestParam(value = "nome") String nome, HttpServletRequest request)
     {
         SessionProvider.setConfig(request);
-        String path = (Utility.getPath("img", request) + nome + id + ".jpg");
+
+        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+        Date hora = Calendar.getInstance().getTime(); // Ou qualquer outra forma que tem
+        String hs = sdf.format(hora);
+        hs = hs.replace(":", "");
+
+        String path = (Utility.getPath("img", request) + nome + id + hs + ".jpg");
 
         FotosDao fd = new FotosDao(true);
         Fotos foto = fd.find(id);
@@ -92,6 +100,18 @@ public class ImagensController
         extractor.setInputStream(foto.getFoto());
         extractor.extract();
 
-        return new OperationResult(StatusRetorno.OPERACAO_OK, "Imagem exraída com exito.", "img/" + nome + id + ".jpg").toJson();
+        return new OperationResult(StatusRetorno.OPERACAO_OK, "Imagem exraída com exito.", "img/" + nome + id + hs + ".jpg").toJson();
+    }
+    
+    @RequestMapping(value = "img-rem", produces = "application/json; charset=utf-8")
+    public @ResponseBody
+    String remove(@RequestParam(value = "id") int id)
+    {
+        FotosDao fd =new FotosDao(false);
+        Fotos foto = fd.find(id);
+        fd.delete(foto);
+        fd.commit();
+        
+        return new OperationResult(StatusRetorno.OPERACAO_OK, "Foto excluida", "").toJson();
     }
 }
