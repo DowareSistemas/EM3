@@ -7,8 +7,11 @@ package controllers;
 
 import dao.UsuariosDao;
 import java.util.List;
+import java.util.Random;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import model.UserToken;
 import model.Usuarios;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
@@ -97,9 +100,17 @@ public class UsuariosController
             return new OperationResult(StatusRetorno.FALHA_INTERNA, "Ocorreu um problema ao excluir o usuário", "").toJson();
     }
 
+    @RequestMapping(value = "/usr-disconnect", produces = "application/json; charset=utf-8")
+    public @ResponseBody
+    String disconnectAllUsers(@RequestParam(value = "id") int usuario_id)
+    {
+        ConnectedUsers.getInstance().disconnectAll(usuario_id);
+        return new OperationResult(StatusRetorno.OPERACAO_OK, "OK", "").toJson();
+    }
+    
     @RequestMapping(value = "/usr-login", produces = "application/json; charset=utf-8")
     public @ResponseBody
-    String login(Usuarios usuario, HttpServletRequest request)
+    String login(Usuarios usuario, HttpServletRequest request, HttpSession httpSession)
     {
         SessionProvider.setConfig(request);
 
@@ -109,8 +120,21 @@ public class UsuariosController
         UsuariosDao ud = new UsuariosDao();
         usuario = ud.efetuaLogin(usuario);
 
+        if (ConnectedUsers.getInstance().exists(usuario.getId()))
+            return new OperationResult(StatusRetorno.USUARIO_CONECTADO, "Este usuário ja está conectado no servidor.", ConnectedUsers.getInstance().find(usuario.getId())).toJson();
+
         if (usuario.getId() > 0)
-            return new OperationResult(StatusRetorno.OPERACAO_OK, "1", usuario).toJson();
+        {
+            String token = geraToken();
+            while (ConnectedUsers.getInstance().exists(token))
+            {
+                token = geraToken();
+            }
+
+            UserToken ut = new UserToken(usuario, token);
+            ConnectedUsers.getInstance().add(ut);
+            return new OperationResult(StatusRetorno.OPERACAO_OK, "1", ut).toJson();
+        }
         else
             return new OperationResult(StatusRetorno.NAO_ENCONTRADO, "Usuário ou senha incorretos", null).toJson();
     }
@@ -162,5 +186,42 @@ public class UsuariosController
             return new OperationResult(StatusRetorno.OPERACAO_OK, "Acesso autorizado.", 1).toJson();
         else
             return new OperationResult(StatusRetorno.OPERACAO_OK, "Acesso negado.", 0).toJson();
+    }
+
+    @RequestMapping(value = "/usr-quicked", produces = "application/json; charset=utf-8")
+    public @ResponseBody
+    String userQuicked(@RequestParam(value = "token") String token)
+    {
+        UserToken uc = ConnectedUsers.getInstance().find(token);
+        return new OperationResult(StatusRetorno.USUARIO_DISCONECTADO, "Esta instância foi desconectada. O sistema será encerrado.", uc).toJson();
+    }
+
+    private String geraToken()
+    {
+        try
+        {
+            int primeiroDigito = 0;
+            int digitoVerificador = 0;
+
+            String result = "";
+            Random radom = new Random();
+            int numeroTmp = 0;
+
+            for (int i = 0; i < 8; i++)
+            {
+                numeroTmp = radom.nextInt(10);
+                result += numeroTmp + "";
+
+                if (i == 0)
+                    primeiroDigito = numeroTmp;
+            }
+
+            digitoVerificador = (numeroTmp * primeiroDigito);
+            return (result + "-" + digitoVerificador);
+        }
+        catch (Exception ex)
+        {
+            return geraToken();
+        }
     }
 }

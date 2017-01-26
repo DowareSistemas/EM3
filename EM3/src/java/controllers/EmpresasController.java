@@ -10,6 +10,7 @@ import com.google.gson.Gson;
 import dao.EmpresaDao;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 import model.Empresa;
 import model.Enderecos;
@@ -68,7 +69,7 @@ public class EmpresasController
 
     @RequestMapping(value = "/emp-find", produces = "application/json; charset=utf-8")
     public @ResponseBody
-    String find(@RequestParam(value = "id") int id, HttpServletRequest request)
+    String find(@RequestParam(value = "id") int id, HttpServletRequest request, HttpSession httpSession)
     {
         SessionProvider.setConfig(request);
 

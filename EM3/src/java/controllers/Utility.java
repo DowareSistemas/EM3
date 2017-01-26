@@ -44,9 +44,13 @@ public class Utility
     public static String getPath(String folder, HttpServletRequest request)
     {
         String path = request.getServletContext().getRealPath("/" + folder);
-
-        path = path.substring(0, path.indexOf("\\build"));
-        path += "\\web\\" + folder + "\\";
+        if (path.contains("\\build"))
+        {
+            path = path.substring(0, path.indexOf("\\build"));
+            path += "\\web\\" + folder + "\\";
+        }
+        else
+            path += "\\";
 
         return path;
     }

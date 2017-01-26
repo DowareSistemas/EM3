@@ -16,7 +16,7 @@ import interfaces.IRepository;
 import java.util.List;
 import model.Caracteristicas;
 import model.Produtos;
-import model.Produtos_caractetisticas;
+import model.Produtos_caracteristicas;
 import sessionProvider.SessionProvider;
 
 /**
@@ -59,7 +59,7 @@ public class CaracteristicasRepository extends RepositoryImpl<Caracteristicas>
 
     public boolean podeExcluir(int id)
     {
-        Produtos_caractetisticas pc = new Produtos_caractetisticas();
+        Produtos_caracteristicas pc = new Produtos_caracteristicas();
         
         Session session = SessionProvider.openSession();
         session.createCriteria(pc, RESULT_TYPE.MULTIPLE)

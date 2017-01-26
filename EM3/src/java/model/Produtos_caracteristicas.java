@@ -20,13 +20,25 @@ import java.io.InputStream;
  *
  * @author Persistor4J
  */
-public class Produtos_caractetisticas extends Entity
+public class Produtos_caracteristicas extends Entity
 {
 
+    private int id;
     private int caracteristica_id;
     private Caracteristicas caracteristicas;
     private int produto_id;
     private Produtos produtos;
+
+    @PrimaryKey(increment = INCREMENT.MANUAL)
+    public int getId()
+    {
+        return id;
+    }
+
+    public void setId(int id)
+    {
+        this.id = id;
+    }
 
     public void setCaracteristicas(Caracteristicas caracteristicas)
     {

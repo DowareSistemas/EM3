@@ -15,6 +15,10 @@ import br.com.persistor.enums.JOIN_TYPE;
 import br.com.persistor.enums.LOAD;
 import java.util.Date;
 import java.io.InputStream;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+import org.hibernate.validator.constraints.NotEmpty;
 
 /**
  *
@@ -24,10 +28,20 @@ public class Tabelas_precos extends Entity
 {
 
     private int id;
+    
+    @NotNull(message = "O nome da tabela é obrigatório")
+    @NotEmpty(message = "O nome da tabela é obrigatório")
+    @Size(max = 100, message = "O nome da tabela não pode conter mais de 100 caracteres")
     private String nome;
+    
+    @NotNull(message = "Informe a data de inicío")
+    @NotEmpty(message = "Informe a data de inicío")
     private String data_inicio;
     private String data_inativacao;
+    
     private int forma_pagamento_id;
+    
+    @NotNull(message = "Informe se a tabela está inativa")
     private boolean inativo;
 
     private Formas_pagamento formas_pagamento;

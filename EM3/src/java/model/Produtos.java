@@ -71,7 +71,7 @@ public class Produtos extends Entity
     private int marca_id;
     private int validade;
     private BigDecimal peso_liquido;
-    private int ponto_pedido;
+    private BigDecimal ponto_pedido;
     private int fornecedor_padrao;
 
     private Classes_imposto classes_imposto;
@@ -520,12 +520,12 @@ public class Produtos extends Entity
         this.peso_liquido = peso_liquido;
     }
 
-    public int getPonto_pedido()
+    public BigDecimal getPonto_pedido()
     {
         return ponto_pedido;
     }
 
-    public void setPonto_pedido(int ponto_pedido)
+    public void setPonto_pedido(BigDecimal ponto_pedido)
     {
         this.ponto_pedido = ponto_pedido;
     }

@@ -49,6 +49,14 @@ public class FotosDao
         db.delete(foto);
     }
     
+    public void delete(int id)
+    {
+        if(id == 0)
+            return;
+        
+        delete(find(id));
+    }
+    
     public void commit()
     {
         db.commit(true);

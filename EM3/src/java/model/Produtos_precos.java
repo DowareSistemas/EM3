@@ -26,12 +26,45 @@ public class Produtos_precos extends Entity
     private int id;
     private int produto_id;
     private int tabela_id;
+    private int preco_base;
+    private BigDecimal margem;
     private BigDecimal valor;
     private boolean preco_padrao;
     private String uf;
+    private BigDecimal faixa;
 
     private Produtos produtos;
     private Tabelas_precos tabelas_precos;
+
+    public int getPreco_base()
+    {
+        return preco_base;
+    }
+
+    public void setPreco_base(int preco_base)
+    {
+        this.preco_base = preco_base;
+    }
+
+    public BigDecimal getMargem()
+    {
+        return margem;
+    }
+
+    public void setMargem(BigDecimal margem)
+    {
+        this.margem = margem;
+    }
+
+    public BigDecimal getFaixa()
+    {
+        return faixa;
+    }
+
+    public void setFaixa(BigDecimal faixa)
+    {
+        this.faixa = faixa;
+    }
 
     @OneToOne(source = "produto_id", target = "id", join_type = JOIN_TYPE.INNER, load = LOAD.AUTO)
     public Produtos getProdutos()

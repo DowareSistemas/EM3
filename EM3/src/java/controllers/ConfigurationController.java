@@ -37,37 +37,37 @@ import sessionProvider.SessionProvider;
 public class ConfigurationController
 {
 
-    @RequestMapping("/autconfig")
+    @RequestMapping(value = "/autconfig", produces = "application/json; charset=utf-8")
     public @ResponseBody
     String aut(@RequestParam(value = "user") String user,
             @RequestParam(value = "passwd") String passwd)
     {
         if (user.equals("DBADMIN") && passwd.equals("dwmasterdb"))
-            return "1";
+            return new OperationResult(StatusRetorno.OPERACAO_OK, "", "").toJson();
         else
-            return "0";
+            return new OperationResult(StatusRetorno.FALHA_VALIDACAO, "Usuário ou senha inválidos", "").toJson();
     }
 
-    @RequestMapping("/testconfig")
+    @RequestMapping( value = "/testconfig", produces = "application/json; charset=utf-8")
     public @ResponseBody
     String testConfig(DBConfig config)
     {
         config.setPersistenceLogger(PersistenceLogger.class);
         SessionProvider.setConfig(config);
         if (SessionProvider.test())
-            return "1";
+            return new OperationResult(StatusRetorno.OPERACAO_OK, "Conexão OK!", "").toJson();
         else
-            return "0";
+            return new OperationResult(StatusRetorno.FALHA_INTERNA, "Falha na comunicação!\nUsuário, senha ou banco de dados incorretos!", "").toJson();
     }
 
-    @RequestMapping("/getdb_type")
+    @RequestMapping(value = "/getdb_type", produces = "application/json; charset=utf-8")
     public @ResponseBody
     String getDb(HttpServletRequest request)
     {
         return new OperationResult(StatusRetorno.OPERACAO_OK, getConfig(request).getDb_type().toString(), "").toJson();
     }
 
-    @RequestMapping("/saveconfig")
+    @RequestMapping(value = "/saveconfig", produces = "application/json; charset=utf-8")
     public @ResponseBody
     String save(DBConfig config, HttpServletRequest request)
     {
@@ -93,7 +93,7 @@ public class ConfigurationController
             p.store(fOut, "");
             fOut.close();
 
-            return "1";
+            return new OperationResult(StatusRetorno.OPERACAO_OK, "", "").toJson();
         }
         catch (Exception ex)
         {
@@ -157,11 +157,10 @@ public class ConfigurationController
             config.setDatabase(p.getProperty("prop.database"));
 
             return config;
-
         }
         catch (Exception ex)
         {
-
+            System.err.println(ex.getMessage());
         }
         return new DBConfig();
     }

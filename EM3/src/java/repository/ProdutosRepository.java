@@ -129,8 +129,10 @@ public class ProdutosRepository extends RepositoryImpl<Produtos>
         c.add(Restrictions.like(FILTER_TYPE.AND, "produtos.ean", searchTerm, MATCH_MODE.ANYWHERE));
         c.add(Restrictions.like(FILTER_TYPE.OR, "produtos.referencia", searchTerm, MATCH_MODE.ANYWHERE));
         c.add(Restrictions.like(FILTER_TYPE.OR, "produtos.descricao", searchTerm, MATCH_MODE.ANYWHERE));
-        c.add(Restrictions.like(FILTER_TYPE.OR, "marcas.id", searchTerm, MATCH_MODE.ANYWHERE));
+        c.add(Restrictions.like(FILTER_TYPE.OR, "marcas.nome", searchTerm, MATCH_MODE.ANYWHERE));
+        c.add(Restrictions.like(FILTER_TYPE.OR, "grupos_produtos.descricao", searchTerm, MATCH_MODE.ANYWHERE));
         c.add(Restrictions.like(FILTER_TYPE.OR, "produtos.fabricante", searchTerm, MATCH_MODE.ANYWHERE));
+        c.add(Restrictions.eq(FILTER_TYPE.OR, "produtos.cod_fabricante", searchTerm));
         c.endPrecedence();
 
         c.addLimit(Limit.paginate(page, 300, "produtos.id"));
