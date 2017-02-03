@@ -55,7 +55,7 @@ public class EstoqueDao
         db.delete(estoque);
     }
     
-    public void delete(int produto_id)
+    public void deleteByProduto(int produto_id)
     {
         db.deleteByProduto(produto_id, getSession());
     }

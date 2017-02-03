@@ -6,6 +6,7 @@
 package controllers;
 
 import dao.Tabelas_precosDao;
+import java.math.BigDecimal;
 import java.util.List;
 import javax.validation.Valid;
 import model.Tabelas_precos;
@@ -73,11 +74,32 @@ public class Tabelas_precosController
                 : new OperationResult(StatusRetorno.OPERACAO_OK, "", tabela).toJson());
     }
 
+    @RequestMapping(value = "/tprc-getpreco", produces = "application/json; charset=utf-8")
+    public @ResponseBody
+    String getPreco(
+    @RequestParam(value = "produto_id") int produto_id,
+            @RequestParam(value = "uf") String uf,
+            @RequestParam(value = "quant") double faixa,
+            @RequestParam(value = "unidade_id") int unidade_id,
+            @RequestParam(value = "tabela_id") int tabela_id)
+    {
+        Tabelas_precosDao tpd = new Tabelas_precosDao();
+        BigDecimal preco = tpd.getPreco(produto_id, uf, faixa, unidade_id, tabela_id);
+        if(preco == null)
+            preco = new BigDecimal("0.00");
+        return new OperationResult(StatusRetorno.OPERACAO_OK, "", preco.toString()).toJson();
+    }
+    
     @RequestMapping(value = "/tprc-rem", produces = "application/json; charset=utf-8")
     public @ResponseBody
     String remove(@RequestParam(value = "id") int id)
     {
         Tabelas_precosDao tpd = new Tabelas_precosDao();
+        if(!tpd.podeExcluir(id))
+        { 
+            return new OperationResult(StatusRetorno.FALHA_VALIDACAO, tpd.getMessage(), "").toJson();
+        }
+        
         Tabelas_precos tabela = tpd.find(id);
 
         if (tabela.getId() == 0)

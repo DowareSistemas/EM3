@@ -8,6 +8,7 @@ package controllers;
 import dao.Produto_caracteristicaDao;
 import dao.ProdutosDao;
 import java.util.List;
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import model.Produtos;
 import model.Produtos_caracteristicas;
@@ -26,40 +27,41 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Scope(value = "request")
 public class ProdutosController
 {
+
     @RequestMapping(value = "prd-limpacaract", produces = "application/json; charset=utf-8")
     public @ResponseBody
     String limpaCaracteristicas(@RequestParam(value = "produto_id") int produto_id)
     {
         Produto_caracteristicaDao pcd = new Produto_caracteristicaDao(true);
         pcd.removeAll(produto_id);
-        
+
         return new OperationResult(StatusRetorno.OPERACAO_OK, "Caracteristicas excluidas", "").toJson();
     }
-    
+
     @RequestMapping(value = "prd-listacaract", produces = "application/json; charset=utf-8")
     public @ResponseBody
     String listaCaract(@RequestParam(value = "produto_id") int produto_id)
     {
         Produto_caracteristicaDao pcd = new Produto_caracteristicaDao();
         List<Produtos_caracteristicas> list = pcd.listAll(produto_id);
-        
+
         return (list.isEmpty()
                 ? new OperationResult(StatusRetorno.NAO_ENCONTRADO, "Nenhum registro encontrado", "").toJson()
                 : new OperationResult(StatusRetorno.OPERACAO_OK, list.size() + " registros encontrados", list).toJson());
     }
-    
+
     @RequestMapping(value = "prd-addcaract", produces = "application/json; charset=utf-8")
     public @ResponseBody
     String addCaracteristica(Produtos_caracteristicas pc)
     {
         Produto_caracteristicaDao pcd = new Produto_caracteristicaDao(true);
         pcd.add(pc);
-        
+
         return (pc.saved
                 ? new OperationResult(StatusRetorno.OPERACAO_OK, "Caracteristica do produto adicionada", "").toJson()
                 : new OperationResult(StatusRetorno.FALHA_INTERNA, "Ocorreu um problema ao adicionar a característica ao produto. Acione o suporte Doware.", "").toJson());
     }
-    
+
     @RequestMapping(value = "prd-search", produces = "application/json; charset=utf-8")
     public @ResponseBody
     String search(
@@ -103,6 +105,7 @@ public class ProdutosController
     public @ResponseBody
     String find(@RequestParam(value = "id") int id)
     {
+ 
         Produtos produto = new ProdutosDao(true).find(id);
 
         return (produto.getId() == 0

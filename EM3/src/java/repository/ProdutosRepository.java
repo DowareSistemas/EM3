@@ -170,7 +170,7 @@ public class ProdutosRepository extends RepositoryImpl<Produtos>
         Session session = SessionProvider.openSession();
 
         int countPrecos = session.count(Produtos_precos.class, "produto_id = " + id);
-        int countEstoque = session.count(Estoque.class, "produto_id = " + id);
+        int countEstoque = session.count(Estoque.class, "produto_id = " + id + " and local_padrao = 0");
         int countItensMovimento = session.count(Itens_movimento.class, "produto_id = " + id);
 
         session.close();

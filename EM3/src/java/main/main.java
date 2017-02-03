@@ -8,8 +8,11 @@ package main;
 import br.com.persistor.enums.DB_TYPE;
 import br.com.persistor.generalClasses.DBConfig;
 import br.com.persistor.test.LogTest;
+import controllers.ConnectedUsers;
 import dao.MarcasDao;
 import model.Marcas;
+import model.UserToken;
+import model.Usuarios;
 import sessionProvider.SessionProvider;
 
 /**
@@ -23,7 +26,7 @@ public class main
     {
         try
         {
-         /*   SessionProvider.setConfig(getConfig());
+            /*   SessionProvider.setConfig(getConfig());
             
             Marcas m = new Marcas();
             m.setNome("hahaha");
@@ -32,6 +35,26 @@ public class main
             
             if(m.saved || m.updated)
             System.out.println(m.getId()); */
+
+         /*   Usuarios u = new Usuarios();
+            u.setId(1);
+            u.setNome("ADmin");
+
+            UserToken ut = new UserToken(u, "81547686");
+            ConnectedUsers.getInstance().add(ut);
+            ConnectedUsers.getInstance().bloqueiaTabela(ConnectedUsers.getInstance().find(1), "itens_pedido", 10);
+
+            if (ConnectedUsers.getInstance().existeBloqueio(ConnectedUsers.getInstance().find(1), "itens_pedido", 10))
+                System.out.println("existe bloqueio");
+            else
+                System.out.println("nao existe bloqueio");
+
+            ConnectedUsers.getInstance().desbloqueiaTabela(ConnectedUsers.getInstance().find(1), "itens_pedido", 10);
+
+            if (ConnectedUsers.getInstance().existeBloqueio(ConnectedUsers.getInstance().find(1), "itens_pedido", 10))
+                System.out.println("existe bloqueio");
+            else
+                System.out.println("nao existe bloqueio");*/
         }
         catch (Exception ex)
         {

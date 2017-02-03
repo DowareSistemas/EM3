@@ -17,5 +17,6 @@ public class StatusRetorno
     public static final int FALHA_VALIDACAO = 550;
     public static final int NAO_AUTORIZADO_LS = 900;
     public static final int USUARIO_CONECTADO = 650;
-    static int USUARIO_DISCONECTADO = 680;
+    public static int USUARIO_DISCONECTADO = 680;
+    public static int REGISTRO_BLOQUEADO = 900;
 }

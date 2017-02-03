@@ -7,6 +7,7 @@ package controllers;
 
 import java.util.ArrayList;
 import java.util.List;
+import model.RegistroBloqueio;
 import model.UserToken;
 
 /**
@@ -18,17 +19,53 @@ public class ConnectedUsers
 
     private List<UserToken> tokens = null;
     private static ConnectedUsers instance = null;
+    private List<RegistroBloqueio> bloqueios = null;
+
+    public RegistroBloqueio getBloqueio(String tabela, int id)
+    {
+        for (RegistroBloqueio rb : instance.bloqueios)
+        {
+            if (rb.Tabela.equals(tabela) && rb.Id == id)
+                return rb;
+        }
+
+        return null;
+    }
+
+    public void bloqueiaTabela(UserToken ut, String tabela, int id)
+    {
+        RegistroBloqueio rb = getBloqueio(tabela, id);
+        if (rb != null)
+            return;
+
+        instance.bloqueios.add(new RegistroBloqueio(ut.getUsuario().getNome(), tabela, id));
+    }
+
+    public void desbloqueiaTabela(UserToken ut, String tabela, int id)
+    {
+        for (RegistroBloqueio rb : instance.bloqueios)
+        {
+            if (rb.Tabela.equals(tabela)
+                    && rb.Id == id
+                    && rb.Usuario.equals(ut.getUsuario().getNome()))
+            {
+                instance.bloqueios.remove(rb);
+                break;
+            }
+        }
+    }
 
     private ConnectedUsers()
     {
         tokens = new ArrayList<UserToken>();
+        bloqueios = new ArrayList<RegistroBloqueio>();
     }
 
     public List<UserToken> getTokens()
     {
         return instance.tokens;
     }
-    
+
     public static ConnectedUsers getInstance()
     {
         if (instance == null)
@@ -71,6 +108,12 @@ public class ConnectedUsers
             if (ut.getToken().equals(token))
             {
                 tokens.remove(ut);
+                for (RegistroBloqueio rb : instance.bloqueios)
+                {
+                    if (rb.Usuario.equals(ut.getUsuario().getNome()));
+                    instance.bloqueios.remove(rb);
+                    break;
+                }
                 return;
             }
         }
@@ -80,15 +123,21 @@ public class ConnectedUsers
     {
         List<UserToken> toRemove = new ArrayList<UserToken>();
 
-        for (UserToken uc : instance.tokens)
+        for (UserToken ut : instance.tokens)
         {
-            if (uc.getUsuario().getId() == usuario_id)
-                toRemove.add(uc);
+            if (ut.getUsuario().getId() == usuario_id)
+                toRemove.add(ut);
         }
 
-        for (UserToken uc : toRemove)
+        for (UserToken ut : toRemove)
         {
-           instance.remove(uc.getToken());
+            instance.remove(ut.getToken());
+            for (RegistroBloqueio rb : instance.bloqueios)
+            {
+                if (rb.Usuario.equals(ut.getUsuario().getNome()));
+                instance.bloqueios.remove(rb);
+                break;
+            }
         }
     }
 

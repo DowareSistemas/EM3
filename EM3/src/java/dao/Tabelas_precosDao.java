@@ -6,6 +6,7 @@
 package dao;
 
 import br.com.persistor.interfaces.Session;
+import java.math.BigDecimal;
 import java.util.List;
 import model.Tabelas_precos;
 import repository.Tabelas_precosRepository;
@@ -65,5 +66,20 @@ public class Tabelas_precosDao
     public Tabelas_precos last()
     {
         return db.last(Tabelas_precos.class);
+    }
+
+    public BigDecimal getPreco(int produto_id, String uf, double faixa, int unidade_id, int tabela_id)
+    {
+        return db.getPreco(produto_id, uf, faixa, unidade_id, tabela_id);
+    }
+
+    public String getMessage()
+    {
+        return db.getMessage();
+    }
+
+    public boolean podeExcluir(int id)
+    {
+        return db.podeExcluir(id);
     }
 }

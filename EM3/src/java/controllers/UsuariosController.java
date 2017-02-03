@@ -11,6 +11,7 @@ import java.util.Random;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
+import model.RegistroBloqueio;
 import model.UserToken;
 import model.Usuarios;
 import org.springframework.context.annotation.Scope;
@@ -29,6 +30,40 @@ import sessionProvider.SessionProvider;
 @Scope(value = "request")
 public class UsuariosController
 {
+
+    @RequestMapping(value = "usr-bloqueiatabela", produces = "application/json; charset=utf-8")
+    public @ResponseBody
+    String bloqueiaTabela(
+            @RequestParam(value = "usuario_id") int usuario_id,
+            @RequestParam(value = "tabela") String tabela,
+            @RequestParam(value = "id") int id)
+    {
+        ConnectedUsers.getInstance().bloqueiaTabela(ConnectedUsers.getInstance().find(usuario_id), tabela, id);
+        return new OperationResult(StatusRetorno.OPERACAO_OK, "Tabela bloqueada", "").toJson();
+    }
+
+    @RequestMapping(value = "usr-existebloqueio", produces = "application/json; charset=utf-8")
+    public @ResponseBody
+    String existeBloqueio(
+            @RequestParam(value = "tabela") String tabela,
+            @RequestParam(value = "id") int id)
+    {
+        RegistroBloqueio rb = ConnectedUsers.getInstance().getBloqueio(tabela, id);
+        return (rb == null
+                ? new OperationResult(StatusRetorno.OPERACAO_OK, "", false).toJson()
+                : new OperationResult(StatusRetorno.OPERACAO_OK, rb.Usuario, true).toJson());
+    }
+
+    @RequestMapping(value = "usr-desbloqueiatabela", produces = "application/json; charset=utf-8")
+    public @ResponseBody
+    String desbloqueiaTabela(
+            @RequestParam(value = "usuario_id") int usuario_id,
+            @RequestParam(value = "tabela") String tabela,
+            @RequestParam(value = "id") int id)
+    {
+        ConnectedUsers.getInstance().desbloqueiaTabela(ConnectedUsers.getInstance().find(usuario_id), tabela, id);
+        return new OperationResult(StatusRetorno.OPERACAO_OK, "Tabela desbloqueada", "").toJson();
+    }
 
     @RequestMapping(value = "/usr-save", produces = "application/json; charset=utf-8")
     public @ResponseBody
@@ -107,7 +142,7 @@ public class UsuariosController
         ConnectedUsers.getInstance().disconnectAll(usuario_id);
         return new OperationResult(StatusRetorno.OPERACAO_OK, "OK", "").toJson();
     }
-    
+
     @RequestMapping(value = "/usr-login", produces = "application/json; charset=utf-8")
     public @ResponseBody
     String login(Usuarios usuario, HttpServletRequest request, HttpSession httpSession)

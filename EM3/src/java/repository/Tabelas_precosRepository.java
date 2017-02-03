@@ -12,8 +12,13 @@ import br.com.persistor.enums.RESULT_TYPE;
 import br.com.persistor.generalClasses.Restrictions;
 import br.com.persistor.interfaces.ICriteria;
 import br.com.persistor.interfaces.Session;
+import br.com.persistor.sessionManager.Query;
+import dao.ProdutosDao;
+import java.math.BigDecimal;
 import java.util.List;
 import model.Formas_pagamento;
+import model.Produtos;
+import model.Produtos_precos;
 import model.Tabelas_precos;
 import sessionProvider.SessionProvider;
 
@@ -37,7 +42,7 @@ public class Tabelas_precosRepository extends RepositoryImpl<Tabelas_precos>
         Session session = SessionProvider.openSession();
         ICriteria c = session.createCriteria(tabelas, RESULT_TYPE.MULTIPLE);
         c.add(JOIN_TYPE.LEFT, formas, "tabelas_precos.forma_pagamento_id = formas_pagamento.id");
-        
+
         switch (tipo)
         {
             case 0: // apenas inativos
@@ -113,5 +118,71 @@ public class Tabelas_precosRepository extends RepositoryImpl<Tabelas_precos>
         }
 
         return l_tabs;
+    }
+
+    public BigDecimal getPreco(int produto_id, String uf, double faixa, int unidade_id, int tabela_id)
+    {
+        if (tabela_id == 0)
+            return new BigDecimal("0.00");
+
+        Produtos_precos pp = new Produtos_precos();
+
+        ProdutosDao pd = new ProdutosDao(true);
+        Produtos p = pd.find(produto_id);
+
+        if (p.getUnidade1() == unidade_id && p.getUnidade2() > 0)
+            faixa = (faixa * p.getFator_conversao());
+
+        String query = "select * from produtos_precos\n"
+                + "where \n"
+                + "tabela_id = ? and\n"
+                + "produto_id = ? and\n"
+                + "faixa >= ?\n";
+
+        if (uf != null)
+        {
+            if (!uf.isEmpty())
+                query += " and uf = ?";
+        }
+
+        query += "order by faixa asc";;
+
+        Session session = SessionProvider.openSession();
+        Query q = session.createQuery(pp, query);
+
+        q.setParameter(1, tabela_id);
+        q.setParameter(2, produto_id);
+        q.setParameter(3, faixa);
+
+        if (uf != null)
+        {
+            if (!uf.isEmpty())
+                q.setParameter(4, uf);
+        }
+
+        q.setResult_type(RESULT_TYPE.UNIQUE);
+        q.execute();
+        session.close();
+
+        return pp.getValor();
+    }
+
+    private String message = "";
+
+    public String getMessage()
+    {
+        return message;
+    }
+
+    public boolean podeExcluir(int id)
+    {
+        Session session = SessionProvider.openSession();
+        int countPrecos = session.count(Produtos_precos.class, "tabela_id = " + id);
+        session.close();
+
+        if (countPrecos > 0)
+            message = "Não é possível excluir esta tabela de preços. Existem um ou mais produtos relacionados a ela";
+
+        return (countPrecos == 0);
     }
 }

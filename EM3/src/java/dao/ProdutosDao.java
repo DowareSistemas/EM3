@@ -65,7 +65,7 @@ public class ProdutosDao
         pcd.removeAll(produto.getId());
 
         EstoqueDao ed = new EstoqueDao(getSession());
-        ed.delete(produto.getId());
+        ed.deleteByProduto(produto.getId());
 
         FotosDao fd = new FotosDao(getSession());
         fd.delete(produto.getFoto_id());
@@ -84,7 +84,7 @@ public class ProdutosDao
         getSession().createQuery(new Lotes_produtos(), 
                 "delete from lotes_produtos where produto_id = " + produto.getId())
                 .execute();
-
+        
         db.delete(produto);
     }
 

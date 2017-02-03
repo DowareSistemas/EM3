@@ -5,12 +5,16 @@
  */
 package model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  *
  * @author Marcos Vinícius
  */
 public class UserToken
 {
+
     private Usuarios usuario;
     private String token;
 
@@ -19,7 +23,7 @@ public class UserToken
         this.usuario = usuario;
         this.token = token;
     }
-    
+
     public Usuarios getUsuario()
     {
         return usuario;
@@ -39,5 +43,4 @@ public class UserToken
     {
         this.token = token;
     }
-    
 }
